@@ -28,135 +28,149 @@ import SCompanyManage from "../Pages/SuperAdmin/CompanyManage.jsx";
 import SCompanyDetails from "../Pages/SuperAdmin/SCompanyDetails.jsx";
 import Otp from "../Pages/Auth/Otp.jsx";
 import UpdatePassword from "../Pages/Auth/UpdatePassword.jsx";
+import SurveyQuestions from "../Pages/SurveyPages/SurveyQuestions.jsx";
+import ThankYouPage from "../Pages/SurveyPages/ThankYouPage.jsx";
+import AllQuestionAnsPage from "../Pages/SurveyPages/AllQuestionAnsPage.jsx";
 // import Otp from "../Pages/Auth/Otp.jsx";
 
-
 export const router = createBrowserRouter([
-    {
+  {
+    path: "/",
+    element: <Root />,
+    //   errorElement: <ErrorPage />,
+    children: [
+      {
         path: "/",
-        element: <Root />,
-        //   errorElement: <ErrorPage />,
-        children: [
-            {
-                path: '/',
-                element: <App />,
-            },
-            {
-                path: '/total-survey-request',
-                element: <TotalSurveyRequest />,
-            },
-            {
-                path: '/driver-details/:id',
-                element: <DriverProfile />,
-            },
-            {
-                path: '/total-user',
-                element: <UserTable />,
-            },
-            {
-                path: '/privacy-policy',
-                element: <PrivacyPolicy />,
-            },
-            {
-                path: '/terms',
-                element: <Terms />,
-            },
-            {
-                path: '/profile',
-                element: <Profile />,
-            }, 
-            {
-                path: '/create-project',
-                element: <CreateProject />,
-            },
-            {
-                path: '/create-survey',
-                element: <CreateSurvey />,
-            },
-            {
-                path: '/manage-company',
-                element: <ManageCompany />,
-            },
-            {
-                path: '/manage-event',
-                element: <ManageEvent />,
-            },
-            {
-                path: '/archive',
-                element: <ArchiveProject />,
-            },
-            {
-                path: '/add-project',
-                element: <AddProject />,
-            },
+        element: <App />,
+      },
+      {
+        path: "/total-survey-request",
+        element: <TotalSurveyRequest />,
+      },
+      {
+        path: "/driver-details/:id",
+        element: <DriverProfile />,
+      },
+      {
+        path: "/total-user",
+        element: <UserTable />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "/terms",
+        element: <Terms />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/create-project",
+        element: <CreateProject />,
+      },
+      {
+        path: "/create-survey",
+        element: <CreateSurvey />,
+      },
+      {
+        path: "/manage-company",
+        element: <ManageCompany />,
+      },
+      {
+        path: "/manage-event",
+        element: <ManageEvent />,
+      },
+      {
+        path: "/archive",
+        element: <ArchiveProject />,
+      },
+      {
+        path: "/add-project",
+        element: <AddProject />,
+      },
 
-            {
-                path: '/survey-result',
-                element: <SurveyResult />,
-            },
+      {
+        path: "/survey-result",
+        element: <SurveyResult />,
+      },
 
-            {
-                path: '/notification',
-                element: <Notification />,
-            },
+      {
+        path: "/notification",
+        element: <Notification />,
+      },
 
-            {
-                path: '/project-details/:id',
-                element: <ProjectDetails />,
-            },
+      {
+        path: "/project-details/:id",
+        element: <ProjectDetails />,
+      },
 
-            {
-                path: '/project-users/:id',
-                element: <ProjectUsers/>,
-            },
-            {
-                path: '/survey-comments/:id',
-                element: <SurveyComment/>,
-            },
+      {
+        path: "/project-users/:id",
+        element: <ProjectUsers />,
+      },
+      {
+        path: "/survey-comments/:id",
+        element: <SurveyComment />,
+      },
 
-            {
-                path: '/line-chart/id',
-                element: <chart/>,
-            },
+      {
+        path: "/line-chart/id",
+        element: <chart />,
+      },
 
-            {
-                path: '/survey-user/id',
-                element: <SurveyBasedUser/>,
-            },
+      {
+        path: "/survey-user/id",
+        element: <SurveyBasedUser />,
+      },
+      
+      // super admin dashboard pages
+      {
+        path: "/super-admin",
+        element: <SuperAdminDashboard />,
+      },
 
-            // super admin dashboard pages
-            {
-                path: '/super-admin',
-                element: <SuperAdminDashboard/>,
-            },
+      {
+        path: "/super-admin/company-manage",
+        element: <SCompanyManage />,
+      },
 
-            {
-                path: '/super-admin/company-manage',
-                element: <SCompanyManage />,
-            },
+      {
+        path: "/super-admin/company-details",
+        element: <SCompanyDetails />,
+      },
+    ],
+  },
+  {
+    path: "/auth/login",
+    element: <Login />,
+  },
+  {
+    path: "/auth/forgot-password",
+    element: <ForgotPassword />,
+  },
 
-            {
-                path: '/super-admin/company-details',
-                element: <SCompanyDetails />,
-            },
-
-        ]
-    },
-    {
-        path: '/auth/login',
-        element: <Login/>
-    },
-    {
-        path: '/auth/forgot-password',
-        element: <ForgotPassword/>
-    },
-
-    {
-        path: '/auth/otp',
-        element: <Otp/>
-    },
-    {
-        path: '/auth/update-password',
-        element: <UpdatePassword/>
-    }
+  {
+    path: "/auth/otp",
+    element: <Otp />,
+  },
+  {
+    path: "/auth/update-password",
+    element: <UpdatePassword />,
+  },
+  // Survey Questions :
+  {
+    path: "/surveyQuestions",
+    element: <SurveyQuestions />,
+  },
+  {
+    path: "/thankYouPage",
+    element: <ThankYouPage/>,
+  },
+  {
+    path: "/allQuestionAnsPage",
+    element:<AllQuestionAnsPage/>,
+  },
 ]);

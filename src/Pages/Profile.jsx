@@ -53,6 +53,10 @@ const Profile = () => {
 //   }, [user])
     return (
         <div>
+             <div className='start-center gap-2 mb-3 p-5'>
+                    <Link to={-1} className='bg-[var(--color-2)] py-1 px-2 rounded-md start-center gap-1 text-white'><IoArrowBackSharp />back</Link>
+                    <p className='text-xl'>Admin Profile(Super Admin)</p>
+                </div>
             {(admin &&
             <div className='start-center gap-2 mb-3 p-5'>
                 <Link to={-1}
@@ -101,7 +105,7 @@ const Profile = () => {
                     <p
                         onClick={() => handlePageChange("Profile")}
                         className={`
-                        ${tab === "Profile" ? "border-[#F27405] border-b-2 font-semibold text-[#F27405]" : "border-b-2 border-transparent font-normal text-gray-600"}
+                        ${tab === "Profile" ? "border-[#ecb206] border-b-2 font-semibold text-[#ecb206]" : "border-b-2 border-transparent font-normal text-gray-600"}
                         pb-2 cursor-pointer text-[16px] leading-5  
                     `}
                     >
@@ -110,7 +114,7 @@ const Profile = () => {
                     <p
                         onClick={() => handlePageChange("Change Password")}
                         className={`
-                        ${tab === "Change Password" ? "border-[#F27405] border-b-2 font-semibold text-[#F27405]" : "border-b-2 border-transparent font-normal  text-gray-600"}
+                        ${tab === "Change Password" ? "border-[#ecb206] border-b-2 font-semibold text-[#ecb206]" : "border-b-2 border-transparent font-normal  text-gray-600"}
                         pb-2 cursor-pointer text-base leading-[18px]  
                     `}
                     >
@@ -222,7 +226,7 @@ const Profile = () => {
                                             width: 197,
                                             height: 48,
                                             color: "#FCFCFC",
-                                            background: '#F27405'
+                                            background: '#ecb206'
                                         }}
                                         className='font-normal text-[16px] leading-6 bg-primary'
                                     >
@@ -340,7 +344,7 @@ const Profile = () => {
                                             width: 197,
                                             height: 48,
                                             color: "#FCFCFC",
-                                            background: '#F27405'
+                                            background: '#ecb206'
                                         }}
                                         className='font-normal text-[16px] leading-6 bg-primary'
                                     >

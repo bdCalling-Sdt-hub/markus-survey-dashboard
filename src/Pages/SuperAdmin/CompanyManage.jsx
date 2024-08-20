@@ -5,6 +5,7 @@ import { FaEdit, FaRegEye, FaStar } from 'react-icons/fa';
 import { FaPlus } from 'react-icons/fa6';
 import { IoArrowBackSharp } from 'react-icons/io5';
 import { MdEdit, MdOutlineDelete } from 'react-icons/md';
+import { IoEyeOutline } from "react-icons/io5";
 import { Link } from 'react-router-dom';
 import '../../assets/css/style.css';
 const dataSource = [
@@ -40,7 +41,7 @@ const SCompanyManage = () => {
             key: 'CompanyId  ',
         },
         {
-            title: 'Email',
+            title: 'Company Email',
             dataIndex: 'Email',
             key: 'Email  ',
         },
@@ -65,8 +66,8 @@ const SCompanyManage = () => {
             dataIndex: 'key',
             key: 'key',
             render: (_, record) => {
-                return (<div className='start-center text-2xl gap-1 text-red-600'>
-                    {/* <MdEdit className='cursor-pointer' /> */}
+                return (<div className='start-center text-2xl gap-1 '>
+                    <IoEyeOutline  className='cursor-pointer' />
                     <MdOutlineDelete className='cursor-pointer' />
                 </div>)
             }

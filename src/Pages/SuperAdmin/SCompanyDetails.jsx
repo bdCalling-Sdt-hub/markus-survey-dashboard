@@ -37,15 +37,20 @@ const SCompanyDetails = () => {
             key: 'date  ',
         },
         {
-            title: 'Email',
+            title: 'Company  Email',
             dataIndex: 'date',
             key: 'date  ',
         },
         {
-            title: 'Tool Used',
-            dataIndex: 'toolUsed',
-            key: 'toolUsed  ',
+            title: 'Survey',
+            dataIndex: 'survey',
+            key: 'survey  ',
         },
+        // {
+        //     title: 'Tool Used',
+        //     dataIndex: 'toolUsed',
+        //     key: 'toolUsed  ',
+        // },
 
         {
             title: 'No of Projects',
@@ -53,21 +58,16 @@ const SCompanyDetails = () => {
             key: 'date  ',
         },
         {
-            title: 'No. of Surveys',
-            dataIndex: 'NoSurveys',
-            key: 'NoSurveys  ',
+            title: 'User Of Survey',
+            dataIndex: 'userOfSurvey', 
+            key: 'userOfSurvey  ',
         },
         {
-            title: 'Actions',
-            dataIndex: 'key',
-            key: 'key',
-            render: (_, record) => {
-                return (<div className='start-center text-2xl gap-1 text-red-600'>
-                    {/* <MdEdit className='cursor-pointer' /> */}
-                    <MdOutlineDelete className='cursor-pointer' />
-                </div>)
-            }
+            title: 'No. of Surveys',
+            dataIndex: 'NoSurveys', 
+            key: 'NoSurveys  ',
         },
+       
     ];
     const handleChange = (value) => {
         console.log(`selected ${value}`);

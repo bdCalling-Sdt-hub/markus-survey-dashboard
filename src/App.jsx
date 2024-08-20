@@ -5,6 +5,7 @@ import './App.css'
 import DriverGrowth from './Components/Dashboard/DriverGrowth'
 import Overview from './Components/Dashboard/Overview'
 import SurveyRequest from './Components/Dashboard/SurveyRequest'
+import SurveyQuestions from './Pages/SurveyPages/SurveyQuestions'
 
 function App() {
   const data = [
@@ -48,6 +49,7 @@ function App() {
         </div>
         <SurveyRequest />
       </div>
+   
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Table } from 'antd';
+import { Form, Input, message, Modal, Table } from 'antd';
 import React, { useState } from 'react'
 import { CiSearch } from 'react-icons/ci';
 import { FaEdit, FaRegEye, FaStar } from 'react-icons/fa';
@@ -6,16 +6,96 @@ import { FaPlus } from 'react-icons/fa6';
 import { IoArrowBackSharp } from 'react-icons/io5';
 import { MdEdit, MdOutlineDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { useCreateProjectMutation, useGetProjectsQuery } from '../redux/projects/projectApi';
+import moment from 'moment';
 const dataSource = [
     {
         id: '1',
         ProjectName: 'Mike',
         date: '05/12/2024',
-    }
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
+    {
+        id: '1',
+        ProjectName: 'Mike',
+        date: '05/12/2024',
+    },
 ]
 
 const CreateProject = () => {
     const [openAddModal, setOpenAddModal] = useState(false)
+    const { data: allProject, isLoading: getProjectLoading } = useGetProjectsQuery();
+    console.log(allProject)
+    console.log(allProject?.data?.data)
+    console.log(allProject?.data?.total)
+    console.log(allProject?.data?.per_page)
+
+    const [createProject, { data, isLoading }] = useCreateProjectMutation();
+    if (data) {
+        console.log(data)
+        message.success(data?.message);
+    }
+
+
     const columns = [
         {
             title: 'Serial No',
@@ -24,13 +104,14 @@ const CreateProject = () => {
         },
         {
             title: 'Projects Name',
-            dataIndex: 'ProjectName',
-            key: 'ProjectName ',
+            dataIndex: 'project_name',
+            key: 'project_name',
         },
         {
             title: 'Date',
-            dataIndex: 'date',
-            key: 'date  ',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            render: (_, record) => <p> {moment(record?.created_at).format("L")}  </p>
         },
         {
             title: 'Actions',
@@ -45,7 +126,8 @@ const CreateProject = () => {
         },
     ];
     const onFinish = (value) => {
-
+        console.log(value)
+        createProject(value);
     }
     return (
         <div className='bg-[var(--color-7)] rounded-md'>
@@ -62,7 +144,9 @@ const CreateProject = () => {
                     </button>
                 </div>
             </div>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table className='all-custom-table-pagination' dataSource={allProject?.data?.data} columns={columns} pagination={{
+                pageSize: 5,
+            }} />
             <Modal
                 open={openAddModal}
                 centered
@@ -76,11 +160,11 @@ const CreateProject = () => {
                         onFinish={onFinish}
                     >
                         <Form.Item
-                            name={`surveyName`}
-                            label={`Survey Name`}
+                            name={`project_name`}
+                            label={`Project Name`}
                             rules={[
                                 {
-                                    message: 'Survey Name is required',
+                                    message: 'Project Name is required',
                                     required: true
                                 }
                             ]}

@@ -11,7 +11,19 @@ export const authApi = baseApi.injectEndpoints({
                 }
             }
         }),
+        getProfile: builder.query({
+            query: () => {
+                return {
+                    url: `profile`,
+                    method: "GET",
+                    headers: {
+                        authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+                    }
+                }
+            }
+        }),
+
     }),
 })
 
-export const { useLogInCompanyMutation } = authApi;
+export const { useLogInCompanyMutation, useGetProfileQuery } = authApi;

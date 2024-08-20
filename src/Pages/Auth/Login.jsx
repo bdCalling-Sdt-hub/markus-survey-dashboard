@@ -1,27 +1,16 @@
 
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLogInCompanyMutation } from "../../redux/features/auth/authApi";
 import { jwtDecode } from "jwt-decode";
 
 
 
-
-
-
 const Login = () => {
-
-    const [logInCompany, { data, isLoading }] = useLogInCompanyMutation();
-
-    console.log(data)
-    console.log(data?.access_token)
-
-    const token = data?.access_token ? jwtDecode(data.access_token) : null;
-    console.log('verified', token)
-
-
+    const navigate = useNavigate()
+    const [logInCompany, { isLoading }] = useLogInCompanyMutation();
 
     const onFinish = async (values) => {
         const formData = {
@@ -29,8 +18,19 @@ const Login = () => {
             password: values.password
         }
 
-        logInCompany(formData)
-
+        try {
+            await logInCompany(formData).then((res) => {
+                console.log(res)
+                if (res?.data?.access_token) {
+                    localStorage.setItem("token", JSON.stringify(res?.data?.access_token))
+                    navigate("/")
+                    message.success("Logged In Successfully")
+                }
+            })
+        } catch (error) {
+            console.log(error)
+            message.error(error?.data?.message)
+        }
     };
 
 
@@ -173,7 +173,7 @@ const Login = () => {
                                 style={{ color: "white" }}
                                 to="#"
                             >
-                                Sign In
+                                {isLoading ? "Laoding..." : "Login"}
                             </Link>
                             {/*Sign In*/}
                         </Button>

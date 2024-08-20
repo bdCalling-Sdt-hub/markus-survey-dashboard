@@ -8,10 +8,10 @@ import { LuFilePlus } from 'react-icons/lu'
 import { MdDashboard, MdEvent } from 'react-icons/md'
 import { RiFeedbackLine } from 'react-icons/ri'
 import { SiHomeassistantcommunitystore } from 'react-icons/si'
-import {Link, NavLink, useNavigate} from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { RiBarChart2Line } from "react-icons/ri";
-import {LogoutOutlined} from "@ant-design/icons";
-import {CiLogout} from "react-icons/ci";
+import { LogoutOutlined } from "@ant-design/icons";
+import { CiLogout } from "react-icons/ci";
 import SuperAdminDashboard from "../../Pages/SuperAdmin/SuperAdminDashboard.jsx";
 import SCompanyManage from "../../Pages/SuperAdmin/CompanyManage.jsx";
 import SCompanyDetails from "../../Pages/SuperAdmin/SCompanyDetails.jsx";
@@ -99,7 +99,7 @@ const Sidebar = () => {
         },
 
 
-        admin &&{
+        admin && {
             path: '/super-admin/company-manage',
             label: 'Manage Company',
             sub_menu: false,
@@ -107,7 +107,7 @@ const Sidebar = () => {
             condition: admin,
         },
 
-        admin &&{
+        admin && {
             path: '/super-admin/company-details',
             label: 'Company Details',
             sub_menu: false,
@@ -124,7 +124,7 @@ const Sidebar = () => {
     ]
 
     const navigate = useNavigate();
-    const handleLogOut = ()=>{
+    const handleLogOut = () => {
         navigate("/auth/login")
     }
     const toggleAccordion = (index) => {
@@ -194,7 +194,7 @@ const Sidebar = () => {
                 onClick={handleLogOut}
                 className="flex text-[#FDFDFD] items-center gap-3 cursor-pointer px-6 hover:bg-yellow-500 py-2 mt-10 transition-all"
             >
-                <CiLogout size={24} color="#FDFDFD"/>
+                <CiLogout size={24} color="#FDFDFD" />
                 Log Out
             </div>
 

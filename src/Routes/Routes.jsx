@@ -28,6 +28,7 @@ import SCompanyManage from "../Pages/SuperAdmin/CompanyManage.jsx";
 import SCompanyDetails from "../Pages/SuperAdmin/SCompanyDetails.jsx";
 import Otp from "../Pages/Auth/Otp.jsx";
 import UpdatePassword from "../Pages/Auth/UpdatePassword.jsx";
+
 // import Otp from "../Pages/Auth/Otp.jsx";
 
 

@@ -1,7 +1,7 @@
 import { Input, Modal, Table } from 'antd';
 import React, { useState } from 'react'
 import { CiSearch } from 'react-icons/ci';
-import {FaEdit, FaRegEye, FaStar} from 'react-icons/fa';
+import { FaEdit, FaRegEye, FaStar } from 'react-icons/fa';
 import { MdEdit, MdOutlineDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 const dataSource = [
@@ -45,9 +45,10 @@ const sarvayData = [
     { name: 'Customer Feedback', id: '9' },
 ]
 const SurveyRequest = () => {
+    
     const [openAllowModal, setOpenAllowModal] = useState(false)
     const [selectedID, setSelectedID] = useState([])
-    // console.log(openAllowModal)
+
     const columns = [
         {
             title: 'Serial No',
@@ -91,8 +92,8 @@ const SurveyRequest = () => {
 
 
     return (
-        <div className='bg-[var(--color-7)] rounded-md'>
-            <Table className='dashboard-custom-table' dataSource={dataSource} columns={columns} />
+        <div className='bg-[var(--color-7)] rounded-md mb-8'>
+            <Table className='dashboard-custom-table' pagination={false} dataSource={dataSource} columns={columns} />
             <Modal
                 centered
                 footer={false}
@@ -125,4 +126,4 @@ const SurveyRequest = () => {
     )
 }
 
-export default SurveyRequest
+export default SurveyRequest;

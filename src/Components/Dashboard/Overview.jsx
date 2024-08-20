@@ -1,7 +1,7 @@
 
 import { Select } from 'antd';
-import React, { PureComponent } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis,  Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Overview = () => {
 
@@ -123,12 +123,13 @@ const Overview = () => {
                             left: 20,
                             bottom: 5,
                         }}
+
                     >
-                        <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={10} />
+                        <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={10} data={false} />
                         <YAxis tickLine={false} axisLine={false} />
                         <Tooltip />
                         <Legend />
-                        <Bar  barSize={10} dataKey="pv" stackId="a" fill="#D4A005" />
+                        <Bar barSize={10} dataKey="pv" stackId="a" fill="#D4A005" />
                         <Bar radius={[10, 10, 0, 0]} dataKey="uv" stackId="a" fill="#ECB206" />
                     </BarChart>
                 </ResponsiveContainer>

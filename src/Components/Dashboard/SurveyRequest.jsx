@@ -55,57 +55,44 @@ const SurveyRequest = () => {
             key: 'key',
         },
         {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email  ',
+        },
+        {
             title: 'User',
             dataIndex: 'name',
             key: 'name',
             render: (_, record) => {
                 return (<div className='start-center gap-2'>
-                    <img src={record?.img} className='w-[40px] h-[40px] rounded-full' alt="" />
+                    <img src={record?.img} className='w-[40px] h-[40px] rounded-sm' alt="" />
                     <p className='font-medium'>{record?.name}</p>
                 </div>)
             }
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email  ',
         },
 
         {
             title: 'Request',
             dataIndex: 'key',
+            align: "right",
             key: 'key',
             render: (_, record) => {
                 return (<div className='start-center gap-1'>
                     <button onClick={() => setOpenAllowModal(true)} className='px-4 py-2 rounded-3xl text-white font-semibold bg-green-600'> Allow </button>
                     <button className='px-4 py-2 rounded-3xl text-white font-semibold bg-red-600'> Cancel </button>
                 </div>)
-            }
-        },
+            },
 
-        {
-            title: 'Actions',
-            dataIndex: 'key',
-            key: 'key',
-            // render: (_, record) => {
-            //     return (<div className='start-center gap-1'>
-            //         <button onClick={() => setOpenAllowModal(true)} className='px-4 py-2 rounded-3xl text-white font-semibold bg-green-600'> Allow </button>
-            //     </div>)
-            // }
-            render: (_, record) => {
-                return (<div onClick={() => setOpenAllowModal(true)} className='start-center text-2xl gap-1'>
-                    {/*<Link to={`/add-project`}>*/}
-                        <FaEdit className='cursor-pointer'/>
-                    {/*</Link>*/}
-                </div>)
-            }
         },
-
 
     ];
+
+
+
+
     return (
         <div className='bg-[var(--color-7)] rounded-md'>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table className='dashboard-custom-table' dataSource={dataSource} columns={columns} />
             <Modal
                 centered
                 footer={false}

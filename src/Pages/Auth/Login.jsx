@@ -1,52 +1,39 @@
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router";
-// import loginImage from "../../assets/loginImage.png";
-import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
-// import { UserData, reset } from "../../ReduxSlices/SigninSlice";
 
-// import { useDispatch, useSelector } from "react-redux";
+import { Button, Checkbox, Form, Input } from "antd";
+import React from "react";
+
+import { Link } from "react-router-dom";
+import { useLogInCompanyMutation } from "../../redux/features/auth/authApi";
+import { jwtDecode } from "jwt-decode";
+
+
+
+
+
 
 const Login = () => {
-    const navigate = useNavigate();
-    // const dispatch = useDispatch();
-    // const { isLoading, isError, isSuccess, userData, accessToken, message } =
-    //     useSelector((state) => state.UserData);
-    // useEffect(() => {
-    //   if (isError == true) {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Oops...",
-    //       text: message,
-    //     });
-    //   }
-    //   if (isSuccess == true) {
-    //     localStorage.setItem("yourInfo", JSON.stringify(userData));
-    //     window.location.href = "/";
-    //   }
 
-    //   dispatch(reset());
-    // }, [isLoading, isError, isSuccess, dispatch, navigate]);
+    const [logInCompany, { data, isLoading }] = useLogInCompanyMutation();
 
-    const onFinish = (values) => {
-        // dispatch(UserData(values)).then((res) => {
-        //     if (res.type == 'UserData/fulfilled') {
-        //         navigate('/')
-        //         location.reload()
-        //     } else {
-        //         Swal.fire({
-        //             icon: "error",
-        //             title: "Oops...",
-        //             text: res?.payload?.message,
-        //             showCloseButton: false,
-        //             showConfirmButton: false,
-        //             timer: 1500
-        //         });
-        //     }
-        // });
+    console.log(data)
+    console.log(data?.access_token)
+
+    const token = data?.access_token ? jwtDecode(data.access_token) : null;
+    console.log('verified', token)
+
+
+
+    const onFinish = async (values) => {
+        const formData = {
+            email: values.email,
+            password: values.password
+        }
+
+        logInCompany(formData)
+
     };
+
+
 
     return (
         <div
@@ -57,9 +44,7 @@ const Login = () => {
                 height: "100vh",
             }}
         >
-            {/*<div className="flex justify-center items-center">*/}
-            {/*    <img src={loginImage} alt="" />*/}
-            {/*</div>*/}
+
             <div className="bg-white flex justify-center items-center">
                 <Form
                     name="normal_login"
@@ -82,7 +67,7 @@ const Login = () => {
                     </h1>
 
                     <p
-                        style = {{ color: "#7D7E8A", textAlign: "center"}}
+                        style={{ color: "#7D7E8A", textAlign: "center" }}
                     >
                         Please Sign In to Login Your Account
                     </p>
@@ -186,7 +171,7 @@ const Login = () => {
                             <Link
                                 className="login-form-forgot "
                                 style={{ color: "white" }}
-                                to="/"
+                                to="#"
                             >
                                 Sign In
                             </Link>

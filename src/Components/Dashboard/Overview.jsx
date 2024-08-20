@@ -124,13 +124,12 @@ const Overview = () => {
                             bottom: 5,
                         }}
                     >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
+                        <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={10} />
+                        <YAxis tickLine={false} axisLine={false} />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="pv" stackId="a" fill="#D4A005" />
-                        <Bar dataKey="uv" stackId="a" fill="#ECB206" />
+                        <Bar  barSize={10} dataKey="pv" stackId="a" fill="#D4A005" />
+                        <Bar radius={[10, 10, 0, 0]} dataKey="uv" stackId="a" fill="#ECB206" />
                     </BarChart>
                 </ResponsiveContainer>
             </div>

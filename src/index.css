@@ -62,6 +62,10 @@
 /* .questions .ant-space-item{
 width: 38% !important;
 } */
-
+.dashboard-custom-table .start-center {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
 
 

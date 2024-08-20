@@ -159,7 +159,7 @@ const Sidebar = () => {
         </Link>
     </div>
 
-    <div className="start-start flex-col gap-5 text-white">
+    <div className="flex flex-col gap-5 text-white">
         {links.map((item, index) => {
             if (item?.sub_menu) {
                 return (
@@ -168,9 +168,9 @@ const Sidebar = () => {
                         key={index}
                         className="w-full"
                     >
-                        <div className="start-center gap-2 w-full py-2 bg-[var(--color-3)] px-4 cursor-pointer">
+                        <div className="flex items-center gap-2 w-full py-2 bg-[var(--color-3)] px-4 cursor-pointer">
                             {item?.icon}
-                            {item?.label}
+                            <span className="flex-1">{item?.label}</span>
                             <IoIosArrowForward />
                         </div>
                         <div
@@ -186,7 +186,7 @@ const Sidebar = () => {
                             {item?.sub_menu?.map((sub_item, subIndex) => (
                                 <div key={subIndex} className="flex gap-2">
                                     <div
-                                        className={`mt-4 gap-2 w-5 rounded-e-md ${
+                                        className={` w-2 rounded-e-md ${
                                             window.location.pathname === sub_item.path
                                                 ? "bg-[#ecb206]"
                                                 : ""
@@ -195,13 +195,13 @@ const Sidebar = () => {
                                     <NavLink
                                         to={sub_item?.path}
                                         className={({ isActive }) =>
-                                            `start-center px-4 gap-2 w-full py-2 cursor-pointer my-1 ${
+                                            `flex items-center gap-2 w-full py-2 px-4 cursor-pointer my-1 ${
                                                 isActive ? "bg-[#ecb206]" : "bg-[var(--color-3)]"
                                             }`
                                         }
                                     >
                                         {sub_item?.icon}
-                                        {sub_item?.label}
+                                        <span className="flex-1">{sub_item?.label}</span>
                                     </NavLink>
                                 </div>
                             ))}
@@ -212,7 +212,7 @@ const Sidebar = () => {
                 return (
                     <div key={index} className="flex gap-2">
                         <div
-                            className={`mt-4 gap-2 w-5 rounded-e-md ${
+                            className={`mt-4 w-2 rounded-e-md ${
                                 window.location.pathname === item.path
                                     ? "bg-[#ecb206]"
                                     : ""
@@ -221,13 +221,13 @@ const Sidebar = () => {
                         <NavLink
                             to={item?.path}
                             className={({ isActive }) =>
-                                `mt-4 start-center gap-2 w-full py-2 px-4 cursor-pointer ${
+                                `flex items-center gap-2 w-full py-2 px-4 cursor-pointer mt-4 ${
                                     isActive ? "bg-[#ecb206]" : "bg-[var(--color-3)]"
                                 }`
                             }
                         >
                             {item?.icon}
-                            {item?.label}
+                            <span className="flex-1">{item?.label}</span>
                         </NavLink>
                     </div>
                 );
@@ -237,16 +237,14 @@ const Sidebar = () => {
 
     <div
         onClick={handleLogOut}
-        className="flex text-[#FDFDFD] items-center gap-3 cursor-pointer px-6 hover:bg-yellow-500 py-2 mt-10 transition-all"
+        className="flex text-[#FDFDFD] items-center gap-3 cursor-pointer px-6 hover:bg-yellow-500 py-2 mt-96 transition-all bg-[var(--color-3)]"
     >
         <CiLogout size={24} color="#FDFDFD" />
         Log Out
     </div>
 </div>
 
-
-
-
+ 
   );
 };
 

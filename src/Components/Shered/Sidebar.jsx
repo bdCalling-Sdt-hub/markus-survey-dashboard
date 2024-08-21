@@ -19,7 +19,7 @@ import SCompanyDetails from "../../Pages/SuperAdmin/SCompanyDetails.jsx";
 
 
 const Sidebar = () => {
-    const [openIndex, setOpenIndex] = useState(null);
+    const [openIndex, setOpenIndex] = useState(false);
     const contentRefs = useRef([]);
 
     const admin = false;

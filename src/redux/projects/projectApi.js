@@ -20,9 +20,9 @@ export const projectApi = baseApi.injectEndpoints({
                 return {
                     url: `projects`,
                     method: "GET",
-                    headers: {
-                        authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-                    }
+                    // headers: {
+                    //     authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+                    // }
                 }
             }
         }),

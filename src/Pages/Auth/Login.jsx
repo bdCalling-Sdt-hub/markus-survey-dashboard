@@ -1,36 +1,45 @@
 
 import { Button, Checkbox, Form, Input, message } from "antd";
 import React from "react";
-
 import { Link, useNavigate } from "react-router-dom";
 import { useLogInCompanyMutation } from "../../redux/features/auth/authApi";
-import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../redux/features/auth/authSlice";
+
 
 
 
 const Login = () => {
     const navigate = useNavigate()
-    const [logInCompany, { isLoading }] = useLogInCompanyMutation();
+    const dispatch = useDispatch();
+    const [logInCompany, { data, isLoading }] = useLogInCompanyMutation();
+
 
     const onFinish = async (values) => {
         const formData = {
             email: values.email,
             password: values.password
         }
+        logInCompany(formData)
+        if (data?.access_token) {
+            dispatch(setToken(data?.access_token))
+            console.log(data?.access_token)
 
-        try {
-            await logInCompany(formData).then((res) => {
-                console.log(res)
-                if (res?.data?.access_token) {
-                    localStorage.setItem("token", JSON.stringify(res?.data?.access_token))
-                    navigate("/")
-                    message.success("Logged In Successfully")
-                }
-            })
-        } catch (error) {
-            console.log(error)
-            message.error(error?.data?.message)
         }
+
+        // try {
+        //     await logInCompany(formData).then((res) => {
+        //         if (res?.data?.access_token) {
+        //             dispatch(setToken(res?.data?.access_token))
+        //             localStorage.setItem("token", JSON.stringify(res?.data?.access_token))
+        //             navigate("/")
+        //             message.success("Logged In Successfully")
+        //         }
+        //     })
+        // } catch (error) {
+        //     console.log(error)
+        //     message.error(error?.data?.message)
+        // }
     };
 
 
@@ -156,6 +165,7 @@ const Login = () => {
 
                     <Form.Item style={{ marginBottom: 0 }}>
                         <Button
+
                             type="primary"
                             htmlType="submit"
                             className="login-form-button"
@@ -173,7 +183,7 @@ const Login = () => {
                                 style={{ color: "white" }}
                                 to="#"
                             >
-                                {isLoading ? "Laoding..." : "Login"}
+                                {isLoading ? "Loading..." : "Sign In"}
                             </Link>
                             {/*Sign In*/}
                         </Button>

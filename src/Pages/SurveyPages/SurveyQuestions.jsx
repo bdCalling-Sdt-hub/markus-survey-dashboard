@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function SurveyQuestions() {
   // i18 next
-  const { t, i18n } = useTranslation();
+  const { t,i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState("en");
   // others:
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -27,22 +27,10 @@ export default function SurveyQuestions() {
   // const starOption = true;
 
   const questions = [
-    {
-      id: 1,
-      question: "question1",
-    },
-    {
-      id: 2,
-      question: "question2",
-    },
-    {
-      id: 3,
-      question: "question3",
-    },
-    {
-      id: 4,
-      question: "question4",
-    },
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 }
   ];
 
   const handleAnswerClick = (answer, displayValue) => {
@@ -58,7 +46,7 @@ export default function SurveyQuestions() {
       }));
       const newProgress = ((currentQuestion + 1) / questions.length) * 100;
       setProgress(newProgress);
-
+  
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
         setSelectedAnswer(null);
@@ -70,6 +58,7 @@ export default function SurveyQuestions() {
       alert("Please select an answer before proceeding.");
     }
   };
+  
 
   const handleQuitClick = () => {
     navigate("/thankYouPage");
@@ -149,37 +138,29 @@ export default function SurveyQuestions() {
         }}
       >
         <h1 className="text-3xl text-center my-12">Survey</h1>
-        {/* Translator div start */}
-        <div className="flex justify-end px-10 items-center">
-        <div className="flex border border-[#ecb206] rounded-full overflow-hidden">
+       {/* Translator div start */}
+       <div className="flex justify-end px-14 items-center">
+        <div className="flex gap-5 justify-center items-center border-2 rounded-3xl py-2 px-3 border-[#ecb206]">
           <button
-            className={`my-2 px-4 ${
-              currentLanguage === 'en'
-                ? 'font-bold text-[#ecb206]'
-                : 'font-normal'
-            }`}
-            onClick={() => toggleLanguage('en')}
+            className={`py-1 px-3 ${i18n.language === 'en' ? 'font-bold border-b-2 border-b-red-500' : ''}`}
+            onClick={() => i18n.changeLanguage('en')}
           >
             Eng
           </button>
           <button
-            className={`py-2 px-4 ${
-              currentLanguage === 'de'
-                ? 'font-bold text-[#ecb206]'
-                : 'font-normal'
-            }`}
-            onClick={() => toggleLanguage('de')}
+            className={`py-1 px-3 ${i18n.language === 'de' ? 'font-bold border-b-2 border-b-red-500' : ''}`}
+            onClick={() => i18n.changeLanguage('de')}
           >
             De
           </button>
         </div>
       </div>
-        {/* Translator div end */}
-        <div>
-          <p className="text-center mt-10 px-5">
-            {t(questions[currentQuestion].question)}
-          </p>
-        </div>
+      {/* Translator div end */}
+      <div>
+        <p className="text-center mt-10 px-5">
+          {t(`questions.${questions[currentQuestion].id}`)}
+        </p>
+      </div>
         {starOption ? renderStars() : renderEmojis()}
         <div className="p-5  w-11/12 mx-auto">
           <p>Total Questions: {questions.length} </p>

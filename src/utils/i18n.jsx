@@ -5,18 +5,22 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
-        "question1": "How satisfied are you with your current work environment?",
-        "question2": "How would you rate the support you receive from your team?",
-        "question3": "How do you feel about the work-life balance in your company?",
-        "question4": "How do you feel about your workload?",
+        questions: {
+          "1": "How satisfied are you with your current work environment?",
+          "2": "How would you rate the support you receive from your team?",
+          "3": "How do you feel about the work-life balance in your company?",
+          "4": "How do you feel about your workload?",
+        }
       }
     },
     de: {
       translation: {
-        "question1": "Wie zufrieden sind Sie mit Ihrem aktuellen Arbeitsumfeld?",
-        "question2": "Wie würden Sie die Unterstützung bewerten, die Sie von Ihrem Team erhalten?",
-        "question3": "Wie fühlen Sie sich bezüglich der Work-Life-Balance in Ihrem Unternehmen?",
-        "question4": "Wie fühlen Sie sich bezüglich Ihrer Arbeitsbelastung?",
+        questions: {
+          "1": "Wie zufrieden sind Sie mit Ihrem aktuellen Arbeitsumfeld?",
+          "2": "Wie würden Sie die Unterstützung bewerten, die Sie von Ihrem Team erhalten?",
+          "3": "Wie fühlen Sie sich bezüglich der Work-Life-Balance in Ihrem Unternehmen?",
+          "4": "Wie fühlen Sie sich bezüglich Ihrer Arbeitsbelastung?",
+        }
       }
     }
   },

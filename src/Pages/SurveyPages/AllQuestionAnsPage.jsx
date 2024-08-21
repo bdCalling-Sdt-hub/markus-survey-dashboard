@@ -16,30 +16,31 @@ export default function AllQuestionAnsPage() {
 
   return (
     <div className="container mx-auto mt-10 p-5">
-        
       <div className="flex  items-center">
-      <FaArrowLeft
+        <FaArrowLeft
           className="mt-10 mb-5 "
           onClick={() => navigate(-1)}
         />
-        <h1 className="text-3xl  flex items-end justify-center w-full mt-10 mb-5">All Results</h1>
+        <h1 className="text-3xl flex items-end justify-center w-full mt-10 mb-5">
+          All Results
+        </h1>
       </div>
       <div className="space-y-2">
-        <p >
+        <p>
           Company Name:{" "}
-          <span className="text-[#ecb206] pl-2 ">Creative IT Institute</span>{" "}
+          <span className="text-[#ecb206] pl-2">Creative IT Institute</span>{" "}
         </p>
-        <p >
+        <p>
           Project Name:
-          <span className="text-[#ecb206] pl-2 ">Employee Feedback</span>{" "}
+          <span className="text-[#ecb206] pl-2">Employee Feedback</span>{" "}
         </p>
-        <p >
+        <p>
           Survey Name:
-          <span className="text-[#ecb206] pl-2 "> Survey No 01</span>
+          <span className="text-[#ecb206] pl-2"> Survey No 01</span>
         </p>
-        <p >
+        <p>
           Total Questions:
-          <span className="text-[#ecb206] pl-2 ">{questions.length}</span>{" "}
+          <span className="text-[#ecb206] pl-2">{questions.length}</span>{" "}
         </p>
       </div>
       <div>
@@ -47,21 +48,17 @@ export default function AllQuestionAnsPage() {
           <div key={question.id} className="my-5 p-2">
             <h2 className="py-3 text-[#4B4C53]">
               QN.{index + 1}{" "}
-              <span
-                className="pl-2 "
-              >
-                {" "}
-                {question.question}
-              </span>
+              <span className="pl-2">{question.question}</span>
             </h2>
-           
-            <p className="mb-2"><span className="pr-2">Ans : </span> {answers[question.id]} emoji</p>
+            <p className="mb-2">
+              <span className="pr-2">Ans:</span> {answers[question.id]}
+            </p>
             <hr />
           </div>
         ))}
       </div>
       <button
-        className="py-2 w-full md:w-44 bg-[#ecb206] text-white rounded-md mt-12 mb-10 "
+        className="py-2 w-full md:w-44 bg-[#ecb206] text-white rounded-md mt-12 mb-10"
         onClick={handleDoneButton}
       >
         Done

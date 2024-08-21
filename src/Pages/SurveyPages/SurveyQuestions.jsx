@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // For navigation
-import langimg1 from "../../assets/images/langFlag1.png";
-import langimg2 from "../../assets/images/langFlag2.png";
+import { useNavigate } from "react-router-dom";
 import smile from "../../assets/images/smile.png";
 import angry from "../../assets/images/angry.png";
 import silent from "../../assets/images/silent.png";
 import sad from "../../assets/images/sad.png";
 import blushing from "../../assets/images/blushing.png";
-import comment from "../../assets/images/comment.png";
+import starImage from "../../assets/images/star.png";
+import commentImg from "../../assets/images/comment.png";
 import { Progress } from "antd";
-import { Button, ConfigProvider, Form, Input } from "antd";
+import { ConfigProvider, Form, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
 export default function SurveyQuestions() {
+  const starOption = false; 
+  // const starOption = true; 
+
   const questions = [
     {
       id: 1,
@@ -36,24 +38,23 @@ export default function SurveyQuestions() {
   const [progress, setProgress] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answers, setAnswers] = useState({});
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const handleEmojiClick = (emoji) => {
-    setSelectedAnswer(emoji);
+  const handleAnswerClick = (answer, displayValue) => {
+    setSelectedAnswer(displayValue);
+    console.log(`Selected: ${displayValue}`);
   };
+  
 
   const handleNextClick = () => {
     if (selectedAnswer) {
-      // Store answer
       setAnswers((prevAnswers) => ({
         ...prevAnswers,
-        [questions[currentQuestion].id]: selectedAnswer,
+        [questions[currentQuestion].id]: selectedAnswer, // Store the character
       }));
-      // Update progress
       const newProgress = ((currentQuestion + 1) / questions.length) * 100;
       setProgress(newProgress);
-
-      // Go to next question or finish
+  
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
         setSelectedAnswer(null);
@@ -62,21 +63,64 @@ export default function SurveyQuestions() {
         navigate("/allQuestionAnsPage", { state: { questions, answers } });
       }
     } else {
-      alert("Please select an emoji before proceeding.");
+      alert("Please select an answer before proceeding.");
     }
   };
+  
+ 
 
   const handleQuitClick = () => {
-    navigate("/thankYouPage"); // Navigate to Thank You page on quit
+    navigate("/thankYouPage");
   };
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
+  const renderStars = () => (
+    <div className="flex gap-5 justify-center items-center my-12">
+      {[...Array(5)].map((_, index) => (
+        <img
+          key={index}
+          className={`btn ${selectedAnswer === index + 1 ? "h-14" : "h-10"}`}
+          src={starImage}
+          alt={`star ${index + 1}`}
+          onClick={() => handleAnswerClick(index + 1, "⭐")}
+        />
+      ))}
+    </div>
+  );
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
+  const renderEmojis = () => (
+    <div className="flex gap-5 justify-center items-center my-12">
+      <img
+        className={`btn ${selectedAnswer === "angry" ? "h-14" : "h-10"}`}
+        src={angry}
+        alt="angry emoji"
+        onClick={() => handleAnswerClick("angry", "😠")}
+      />
+      <img
+        className={`btn ${selectedAnswer === "silent" ? "h-14" : "h-10"}`}
+        src={silent}
+        alt="silent emoji"
+        onClick={() => handleAnswerClick("silent", "🤐")}
+      />
+      <img
+        className={`btn ${selectedAnswer === "sad" ? "h-14" : "h-10"}`}
+        src={sad}
+        alt="sad emoji"
+        onClick={() => handleAnswerClick("sad", "😢")}
+      />
+      <img
+        className={`btn ${selectedAnswer === "blushing" ? "h-14" : "h-10"}`}
+        src={blushing}
+        alt="blushing emoji"
+        onClick={() => handleAnswerClick("blushing", "😊")}
+      />
+      <img
+        className={`btn ${selectedAnswer === "smile" ? "h-14" : "h-10"}`}
+        src={smile}
+        alt="smile emoji"
+        onClick={() => handleAnswerClick("smile", "😊")}
+      />
+    </div>
+  );
 
   return (
     <div className="container mx-auto bg-[fdfdfd] my-24">
@@ -96,60 +140,15 @@ export default function SurveyQuestions() {
         }}
       >
         <h1 className="text-3xl text-center my-12">Survey</h1>
-        {/* Translator div start */}
-        <div className="flex justify-end px-14 items-center">
-          <div className="flex gap-5 justify-center items-center border-2 rounded-3xl py-2 px-3 border-[#ecb206]">
-            <button>
-              <p className="text-[#ECB206]">DE</p>
-            </button>
-            <button>
-              <p>Eng</p>
-            </button>
-          </div>
-        </div>
-        {/* Translator div end */}
         <div>
           <p className="text-center mt-10 px-5">
             {questions[currentQuestion].question}
           </p>
         </div>
-        {/* emojies */}
-        <div className="flex gap-5 justify-center items-center my-12">
-          <img
-            className={`btn ${selectedAnswer === "angry" ? "h-16 " : ""}`}
-            src={angry}
-            alt="angry emoji"
-            onClick={() => handleEmojiClick("angry")}
-          />
-          <img
-            className={`btn ${selectedAnswer === "silent" ? "h-16" : ""}`}
-            src={silent}
-            alt="silent emoji"
-            onClick={() => handleEmojiClick("silent")}
-          />
-          <img
-            className={`btn ${selectedAnswer === "sad" ? "h-16" : ""}`}
-            src={sad}
-            alt="sad emoji"
-            onClick={() => handleEmojiClick("sad")}
-          />
-          <img
-            className={`btn ${selectedAnswer === "blushing" ? "h-16" : ""}`}
-            src={blushing}
-            alt="blushing emoji"
-            onClick={() => handleEmojiClick("blushing")}
-          />
-          <img
-            className={`btn ${selectedAnswer === "smile" ? "h-16" : ""}`}
-            src={smile}
-            alt="smile emoji"
-            onClick={() => handleEmojiClick("smile")}
-          />
-        </div>
-        {/* emoji end */}
+        {starOption ? renderStars() : renderEmojis()}
         <div className="p-5  w-11/12 mx-auto">
           <p>Total Questions: {questions.length} </p>
-          <Progress  percent={progress} status="active" />
+          <Progress percent={progress} status="active" />
         </div>
         <Form
           name="basic"
@@ -162,12 +161,12 @@ export default function SurveyQuestions() {
             padding: "10px",
           }}
           initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
+          onFinish={(values) => console.log("Success:", values)}
+          onFinishFailed={(errorInfo) => console.log("Failed:", errorInfo)}
           autoComplete="off"
         >
           <div className="flex justify-center items-center">
-            <img src={comment} alt="comment" className="h-8 -mr-8 z-10" />
+            <img src={commentImg} alt="comment" className="h-8 -mr-8 z-10" />
             <TextArea
               rows={1}
               placeholder="Write your comment here"

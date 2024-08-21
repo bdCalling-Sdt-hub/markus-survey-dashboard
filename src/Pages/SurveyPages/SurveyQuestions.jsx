@@ -10,51 +10,55 @@ import commentImg from "../../assets/images/comment.png";
 import { Progress } from "antd";
 import { ConfigProvider, Form, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { useTranslation } from 'react-i18next';
 
 export default function SurveyQuestions() {
-  const starOption = false; 
-  // const starOption = true; 
-
-  const questions = [
-    {
-      id: 1,
-      question: "How satisfied are you with your current work environment?",
-    },
-    {
-      id: 2,
-      question: "How would you rate the support you receive from your team?",
-    },
-    {
-      id: 3,
-      question: "How do you feel about the work-life balance in your company?",
-    },
-    {
-      id: 4,
-      question: "How do you feel about your workload?",
-    },
-  ];
-
+  // i18 next
+  const { t, i18n } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState("en");
+  // others:
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [progress, setProgress] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answers, setAnswers] = useState({});
   const navigate = useNavigate();
 
+  const starOption = false;
+  // const starOption = true;
+
+  const questions = [
+    {
+      id: 1,
+      question: "question1",
+    },
+    {
+      id: 2,
+      question: "question2",
+    },
+    {
+      id: 3,
+      question: "question3",
+    },
+    {
+      id: 4,
+      question: "question4",
+    },
+  ];
+
   const handleAnswerClick = (answer, displayValue) => {
     setSelectedAnswer(displayValue);
     console.log(`Selected: ${displayValue}`);
   };
-  
 
   const handleNextClick = () => {
     if (selectedAnswer) {
       setAnswers((prevAnswers) => ({
         ...prevAnswers,
-        [questions[currentQuestion].id]: selectedAnswer, // Store the character
+        [questions[currentQuestion].id]: selectedAnswer,
       }));
       const newProgress = ((currentQuestion + 1) / questions.length) * 100;
       setProgress(newProgress);
-  
+
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
         setSelectedAnswer(null);
@@ -66,13 +70,18 @@ export default function SurveyQuestions() {
       alert("Please select an answer before proceeding.");
     }
   };
-  
- 
 
   const handleQuitClick = () => {
     navigate("/thankYouPage");
   };
 
+  // toggole language:
+  const toggleLanguage = () => {
+    const newLanguage = currentLanguage === "en" ? "de" : "en";
+    setCurrentLanguage(newLanguage);
+    i18n.changeLanguage(newLanguage);
+  };
+  // render star:
   const renderStars = () => (
     <div className="flex gap-5 justify-center items-center my-12">
       {[...Array(5)].map((_, index) => (
@@ -140,9 +149,35 @@ export default function SurveyQuestions() {
         }}
       >
         <h1 className="text-3xl text-center my-12">Survey</h1>
+        {/* Translator div start */}
+        <div className="flex justify-end px-10 items-center">
+        <div className="flex border border-[#ecb206] rounded-full overflow-hidden">
+          <button
+            className={`my-2 px-4 ${
+              currentLanguage === 'en'
+                ? 'font-bold text-[#ecb206]'
+                : 'font-normal'
+            }`}
+            onClick={() => toggleLanguage('en')}
+          >
+            Eng
+          </button>
+          <button
+            className={`py-2 px-4 ${
+              currentLanguage === 'de'
+                ? 'font-bold text-[#ecb206]'
+                : 'font-normal'
+            }`}
+            onClick={() => toggleLanguage('de')}
+          >
+            De
+          </button>
+        </div>
+      </div>
+        {/* Translator div end */}
         <div>
           <p className="text-center mt-10 px-5">
-            {questions[currentQuestion].question}
+            {t(questions[currentQuestion].question)}
           </p>
         </div>
         {starOption ? renderStars() : renderEmojis()}

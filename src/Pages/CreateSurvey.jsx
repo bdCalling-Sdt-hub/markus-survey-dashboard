@@ -1,24 +1,51 @@
-import {Button, DatePicker, Form, Input, Modal, Radio, Select, Table} from 'antd';
-import React, { useState } from 'react'
-import { CiSearch } from 'react-icons/ci';
-import { FaEdit, FaRegEye, FaStar } from 'react-icons/fa';
+import { ConfigProvider, Button, DatePicker, Form, Input, message, Modal, Popconfirm, Radio, Select, Table, Spin, Pagination } from 'antd';
+import React, { useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 import { IoArrowBackSharp } from 'react-icons/io5';
-import { MdEdit, MdOutlineDelete } from 'react-icons/md';
+import { MdOutlineDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import '../assets/css/style.css';
-const dataSource = [
-    {
-        id: '1',
-        ProjectName: 'Mike',
-        date: '05/12/2024',
-    }
-]
-
+import dayjs from 'dayjs';
+import { useGetSurveyQuery, useDeleteSurveyMutation } from '../redux/features/survey/surveyApi';
 
 const CreateSurvey = () => {
     const [isPeriodically, setIsPeriodically] = useState(false);
-    const [openAddModal, setOpenAddModal] = useState(false)
+    const [openAddModal, setOpenAddModal] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 10;
+
+    console.log(currentPage)
+    // delete survey
+    const [deleteSurvey, { isLoading: deleteLoading, error }] = useDeleteSurveyMutation();
+    console.log('rtk error', error)
+
+    // Pop confirm
+    const confirm = async (surveyId) => {
+        console.log(surveyId)
+        try {
+            await deleteSurvey(surveyId).unwrap();
+            message.success('Survey deleted successfully');
+        } catch (error) {
+            message.error('Failed to delete the survey');
+            console.error('Error deleting survey:', error);
+        }
+    };
+
+    const cancel = () => {
+        message.error('Survey deletion canceled');
+    };
+
+
+    const { data: allSurver, isLoading } = useGetSurveyQuery({
+        page: currentPage,
+    }, {
+        refetchOnMountOrArgChange: true,
+    });
+
+    console.log('servey data', allSurver);
+    console.log('servey data', allSurver?.data?.total);
+
+
     const columns = [
         {
             title: 'Serial No',
@@ -26,58 +53,117 @@ const CreateSurvey = () => {
             key: 'id',
         },
         {
-            title: 'Projects Name',
-            dataIndex: 'ProjectName',
-            key: 'ProjectName ',
+            title: 'Survey Name',
+            dataIndex: 'survey_name',
+            key: 'survey_name',
         },
         {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date  ',
+            title: 'Start Date',
+            dataIndex: 'start_date',
+            key: 'start_date',
+        },
+        {
+            title: 'End Date',
+            dataIndex: 'end_date',
+            key: 'end_date',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'archive_status',
+            key: 'archive_status',
         },
         {
             title: 'Actions',
-            dataIndex: 'key',
-            key: 'key',
-            render: (_, record) => {
-                return (<div className='start-center text-2xl gap-1 text-red-600'>
-                    {/* <MdEdit className='cursor-pointer' /> */}
-                    <MdOutlineDelete className='cursor-pointer' />
-                </div>)
-            }
+            key: 'actions',
+            render: (_, record) => (
+                <div className='start-center text-2xl gap-1 text-red-600'>
+                    <Popconfirm
+                        title="Delete the survey"
+                        description="Are you sure to delete this survey?"
+                        onConfirm={() => {
+                            // deleteSurvey(record?.id)
+                            confirm(record?.id)
+                        }}
+                        onCancel={cancel}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <MdOutlineDelete className='cursor-pointer' />
+                    </Popconfirm>
+                </div>
+            ),
         },
     ];
-    const handleChange = (value) => {
-        console.log(`selected ${value}`);
-    };
-    const onFinish = (value) => {
 
-    }
+
+
+    const onFinish = (value) => {
+        console.log(value);
+
+        let period = "once";
+        if (value.period) {
+            period = value.period;
+        }
+        const surveyData = {
+            project_id: value.surveyId,
+            survey_name: value.surveyName,
+            emoji_or_status: value.emojiOrStar,
+            repeat_status: period,
+            start_date: dayjs(value.startDate).format('YYYY-MM-DD'),
+            end_date: dayjs(value.endDate).format('YYYY-MM-DD'),
+        };
+        console.log(surveyData);
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+
     return (
         <div className='bg-[var(--color-7)] rounded-md'>
             <div className='between-center px-3 my-2 pt-5'>
                 <div className='start-center gap-2 mb-3 p-5'>
-                    <Link to={-1} className='bg-[var(--color-2)] py-1 px-2 rounded-md start-center gap-1 text-white'><IoArrowBackSharp />back</Link>
+                    <Link to={-1} className='bg-[var(--color-2)] py-1 px-2 rounded-md start-center gap-1 text-white'>
+                        <IoArrowBackSharp />back
+                    </Link>
                     <p className='text-xl'>Create Survey</p>
                 </div>
                 <div className='end-center gap-2'>
-                    <Select className='h-[40px] bg-[var(--color-2)] rounded-md min-w-44'
-                        defaultValue="lucy"
-                        style={{ width: 120 }}
-                        onChange={handleChange}
-                        options={[
-                            { value: 'jack', label: 'Jack' },
-                            { value: 'lucy', label: 'Lucy' },
-                            { value: 'Yiminghe', label: 'yiminghe' },
-                        ]}
-                    />
-                    <button  onClick={() => setOpenAddModal(true)} className='bg-[var(--color-2)] px-4 rounded-md start-center gap-1 py-2 text-white flex justify-center items-center whitespace-nowrap'>
-                        Add Survey
+                    <button onClick={() => setOpenAddModal(true)} className='bg-[var(--color-2)] px-4 rounded-md start-center gap-1 py-2 text-white flex justify-center items-center whitespace-nowrap'>
+                        Add New Survey
                         <FaPlus />
                     </button>
                 </div>
             </div>
-            <Table dataSource={dataSource} columns={columns} />
+
+
+
+            {
+                deleteLoading || isLoading ? <div className=' h-full flex items-center justify-center'>
+                    <ConfigProvider
+                        theme={{
+                            token: {
+                                colorPrimary: "#ECB206",
+                            },
+                        }}
+                    >
+                        <Spin size="large" />
+                    </ConfigProvider>
+
+                </div>
+                    : <Table
+                        pagination={false}
+                        className='all-custom-table-pagination custom-table'
+                        dataSource={allSurver?.data?.data}
+                        columns={columns}
+                    />
+            }
+
+
+
+
+
             <Modal
                 open={openAddModal}
                 centered
@@ -86,11 +172,10 @@ const CreateSurvey = () => {
             >
                 <div>
                     <p className='text-xl py-2 font-bold'>Create New Survey</p>
-                    <Form className=''
-                          layout='vertical'
-                          onFinish={onFinish}
+                    <Form
+                        layout='vertical'
+                        onFinish={onFinish}
                     >
-
                         {/* Toggle Choice Option */}
                         <Form.Item
                             name="emojiOrStar"
@@ -118,7 +203,20 @@ const CreateSurvey = () => {
                                 }
                             ]}
                         >
-                            <Input className='pb-6 pt-2 border outline-none' placeholder='Type survey name here...'/>
+                            <Input className='pb-6 pt-2 border outline-none' placeholder='Type survey name here...' />
+                        </Form.Item>
+
+                        <Form.Item
+                            name={`surveyId`}
+                            label={`Survey Id`}
+                            rules={[
+                                {
+                                    message: 'Survey Id is required',
+                                    required: true
+                                }
+                            ]}
+                        >
+                            <Input className='pb-6 pt-2 border outline-none' placeholder='Type unique survey id here...' />
                         </Form.Item>
 
                         {/* Toggle Button for Once and Periodically */}
@@ -133,7 +231,7 @@ const CreateSurvey = () => {
                                 >
                                     Once
                                 </Button>
-                                <p  className='font-bold pr-3 mt-2'>Or</p>
+                                <p className='font-bold pr-3 mt-2'>Or</p>
                                 <Button className='ml-2'
                                     value="periodically"
                                     onClick={() => setIsPeriodically(true)}
@@ -160,8 +258,6 @@ const CreateSurvey = () => {
                                 </Form.Item>
                             )}
                         </Form.Item>
-
-
 
                         <div className='flex justify-between'>
                             <Form.Item
@@ -202,13 +298,22 @@ const CreateSurvey = () => {
                         </div>
 
                         <button className='w-full py-2 bg-[var(--color-2)] text-white font-semibold rounded-md'>
-                            save
+                            Save
                         </button>
                     </Form>
                 </div>
             </Modal>
+            <div className="py-6">
+                <Pagination
+                    className="custom-pagination-all"
+                    current={currentPage}
+                    pageSize={pageSize}
+                    total={allSurver?.data?.total}
+                    onChange={handlePageChange}
+                />
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default CreateSurvey
+export default CreateSurvey;

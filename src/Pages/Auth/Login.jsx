@@ -15,6 +15,7 @@ const Login = () => {
     const [logInCompany, { data, isLoading }] = useLogInCompanyMutation();
 
 
+    console.log('login', data)
     const onFinish = async (values) => {
         const formData = {
             email: values.email,
@@ -24,7 +25,7 @@ const Login = () => {
         if (data?.access_token) {
             dispatch(setToken(data?.access_token))
             console.log(data?.access_token)
-
+            navigate('/')
         }
 
         // try {

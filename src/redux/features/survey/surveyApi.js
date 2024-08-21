@@ -1,43 +1,33 @@
 import { baseApi } from "../../api/baseApi";
 
-
-export const surveyAPi = baseApi.injectEndpoints({
+export const surveyApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         createSurvey: builder.mutation({
-            query: (surveyData) => {
-                return {
-                    url: `surveys`,
-                    method: "POST",
-                    body: surveyData,
-                    headers: {
-                        authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-                    }
-                }
-            }
+            query: (surveyData) => ({
+                url: `surveys`,
+                method: "POST",
+                body: surveyData,
+            }),
+            invalidatesTags: ['Survey'], 
         }),
         deleteSurvey: builder.mutation({
             query: (id) => {
+                console.log("form Api", id);
                 return {
                     url: `surveys/${id}`,
                     method: "DELETE",
-                    headers: {
-                        authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-                    }
-                }
-            }
+                };
+            },
+            invalidatesTags: ['Survey'], 
         }),
         getSurvey: builder.query({
-            query: () => {
-                return {
-                    url: `surveys`,
-                    method: "GET",
-                    headers: {
-                        authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-                    }
-                }
-            }
+            query: ({page}) => ({
+                url: `surveys?page=${page}`,
+                method: "GET",
+            }),
+            providesTags: ['Survey'],  
         }),
     }),
-})
+});
 
-export const { useCreateSurveyMutation, useGetSurveyQuery, useDeleteSurveyMutation  } = surveyAPi;
+export const { useCreateSurveyMutation, useGetSurveyQuery, useDeleteSurveyMutation } = surveyApi;

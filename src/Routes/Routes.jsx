@@ -28,6 +28,8 @@ import SCompanyManage from "../Pages/SuperAdmin/CompanyManage.jsx";
 import SCompanyDetails from "../Pages/SuperAdmin/SCompanyDetails.jsx";
 import Otp from "../Pages/Auth/Otp.jsx";
 import UpdatePassword from "../Pages/Auth/UpdatePassword.jsx";
+import PrivateRoute from "./PrivateRoute.jsx";
+
 
 // import Otp from "../Pages/Auth/Otp.jsx";
 
@@ -35,7 +37,7 @@ import UpdatePassword from "../Pages/Auth/UpdatePassword.jsx";
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Root />,
+        element: <PrivateRoute><Root /></PrivateRoute> ,
         //   errorElement: <ErrorPage />,
         children: [
             {

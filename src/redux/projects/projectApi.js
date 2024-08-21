@@ -8,25 +8,40 @@ export const projectApi = baseApi.injectEndpoints({
                     url: `projects`,
                     method: "POST",
                     body: projectData,
-                    headers: {
-                        authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-                    }
+                    // headers: {
+                    //     authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+                    // }
                 }
-            }
+            },
+            invalidatesTags: ['Project'], 
+        }),
+        deleteProject: builder.mutation({
+            query: (projectId) => {
+                return {
+                    url: `projects/${projectId}`,
+                    method: "DELETE",
+                    // headers: {
+                    //     authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+                    // }
+                }
+            },
+            invalidatesTags: ['Project'], 
         }),
 
         getProjects: builder.query({
-            query: () => {
+            query: ({page, search}) => {
+                const query = search ? `?search=${search}` : `?page=${page}`;
                 return {
-                    url: `projects`,
+                    url: `projects${query}`,
                     method: "GET",
                     // headers: {
                     //     authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
                     // }
                 }
-            }
+            },
+            providesTags: ['Project'], 
         }),
     }),
 })
 
-export const { useCreateProjectMutation, useGetProjectsQuery } = projectApi;
+export const { useCreateProjectMutation, useGetProjectsQuery, useDeleteProjectMutation } = projectApi;

@@ -11,17 +11,17 @@ export const authApi = baseApi.injectEndpoints({
                 }
             }
         }),
-        getProfile: builder.query({
-            query: () => {
-                return {
-                    url: `profile`,
-                    method: "GET",
-                    headers: {
-                        authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-                    }
-                }
-            }
-        }),
+        // getProfile: builder.query({
+        //     query: () => {
+        //         return {
+        //             url: `profile`,
+        //             method: "GET",
+        //             headers: {
+        //                 authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
+        //             }
+        //         }
+        //     }
+        // }),
 
     }),
 })

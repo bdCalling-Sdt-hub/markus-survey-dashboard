@@ -13,10 +13,13 @@ const ManageCompany = () => {
 
     const { data: projects } = useGetProjectsQuery();
     console.log('Company', projects)
+
+
     const options = projects?.data?.data?.map(project => ({
         value: project.id,
         label: project.project_name
     }));
+    
     const { data: surveys } = useGetSurveyQuery();
     console.log("Surveys", surveys)
     const surveryOptions = surveys?.data?.data?.map(survey => ({

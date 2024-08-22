@@ -8,7 +8,7 @@ export const surveyApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: surveyData,
             }),
-            invalidatesTags: ['Survey'], 
+            invalidatesTags: ['Survey'],
         }),
         deleteSurvey: builder.mutation({
             query: (id) => {
@@ -18,14 +18,16 @@ export const surveyApi = baseApi.injectEndpoints({
                     method: "DELETE",
                 };
             },
-            invalidatesTags: ['Survey'], 
+            invalidatesTags: ['Survey'],
         }),
         getSurvey: builder.query({
-            query: ({page}) => ({
-                url: `surveys?page=${page}`,
-                method: "GET",
-            }),
-            providesTags: ['Survey'],  
+            query: ({page}) => {
+                return {
+                    url: `surveys?page=${page}`,
+                    method: "GET",
+                }
+            },
+            providesTags: ['Survey'],
         }),
     }),
 });

@@ -107,3 +107,7 @@ ul.ant-pagination.custom-pagination-all.css-dev-only-do-not-override-98ntnt {
   justify-content: center;
 }
 /* .custom-table */
+/* ReCharts */
+.recharts-legend-wrapper {
+  display: none;
+}

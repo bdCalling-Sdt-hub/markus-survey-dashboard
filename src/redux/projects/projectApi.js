@@ -8,9 +8,6 @@ export const projectApi = baseApi.injectEndpoints({
                     url: `projects`,
                     method: "POST",
                     body: projectData,
-                    // headers: {
-                    //     authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-                    // }
                 }
             },
             invalidatesTags: ['Project'], 
@@ -30,13 +27,11 @@ export const projectApi = baseApi.injectEndpoints({
 
         getProjects: builder.query({
             query: ({page, search}) => {
+                
                 const query = search ? `?search=${search}` : `?page=${page}`;
                 return {
                     url: `projects${query}`,
                     method: "GET",
-                    // headers: {
-                    //     authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-                    // }
                 }
             },
             providesTags: ['Project'], 

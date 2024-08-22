@@ -1,12 +1,12 @@
 import { ConfigProvider, Button, DatePicker, Form, Input, message, Modal, Popconfirm, Radio, Select, Table, Spin, Pagination } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 import { IoArrowBackSharp } from 'react-icons/io5';
 import { MdOutlineDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import '../assets/css/style.css';
 import dayjs from 'dayjs';
-import { useGetSurveyQuery, useDeleteSurveyMutation } from '../redux/features/survey/surveyApi';
+import { useGetSurveyQuery, useDeleteSurveyMutation, useCreateSurveyMutation } from '../redux/features/survey/surveyApi';
 
 const CreateSurvey = () => {
     const [isPeriodically, setIsPeriodically] = useState(false);
@@ -14,10 +14,9 @@ const CreateSurvey = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10;
 
-    console.log(currentPage)
+
     // delete survey
-    const [deleteSurvey, { isLoading: deleteLoading, error }] = useDeleteSurveyMutation();
-    console.log('rtk error', error)
+    const [deleteSurvey, { isLoading: deleteLoading }] = useDeleteSurveyMutation();
 
     // Pop confirm
     const confirm = async (surveyId) => {
@@ -42,8 +41,6 @@ const CreateSurvey = () => {
         refetchOnMountOrArgChange: true,
     });
 
-    console.log('servey data', allSurver);
-    console.log('servey data', allSurver?.data?.total);
 
 
     const columns = [
@@ -95,25 +92,47 @@ const CreateSurvey = () => {
         },
     ];
 
+    const [createSurvey, { isSuccess, isError, error }] = useCreateSurveyMutation();
+    console.log(isError)
+    console.log(error)
 
+    
+    useEffect(() => {
+        if (isSuccess) {
+            message.success("Project Created Successfully");
+            setOpenAddModal(false);
+        }
+        if (isError) {
+            message.error("Project Creation Failed");
+            setOpenAddModal(false);
+        }
+    }, [isSuccess, isError]);
 
     const onFinish = (value) => {
-        console.log(value);
-
+        console.log("Form values:", value);
+        
         let period = "once";
         if (value.period) {
             period = value.period;
         }
-        const surveyData = {
-            project_id: value.surveyId,
-            survey_name: value.surveyName,
-            emoji_or_status: value.emojiOrStar,
-            repeat_status: period,
-            start_date: dayjs(value.startDate).format('YYYY-MM-DD'),
-            end_date: dayjs(value.endDate).format('YYYY-MM-DD'),
-        };
-        console.log(surveyData);
+        
+        const formData = new FormData();
+        formData.append("project_id", value.projectId);
+        formData.append("survey_name", value.surveyName);
+        formData.append("emoji_or_star", value.emojiOrStar);
+        formData.append("repeat_status", period);
+        formData.append("start_date", dayjs(value.startDate).format('YYYY-MM-DD'));
+        formData.append("end_date", dayjs(value.endDate).format('YYYY-MM-DD')); 
+    
+        // Log FormData entries
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+    
+        createSurvey(formData);
     };
+    
+    
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -207,11 +226,11 @@ const CreateSurvey = () => {
                         </Form.Item>
 
                         <Form.Item
-                            name={`surveyId`}
-                            label={`Survey Id`}
+                            name={`projectId`}
+                            label={`Project Id`}
                             rules={[
                                 {
-                                    message: 'Survey Id is required',
+                                    message: 'Project Id is required',
                                     required: true
                                 }
                             ]}

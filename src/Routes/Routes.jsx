@@ -29,6 +29,7 @@ import SCompanyDetails from "../Pages/SuperAdmin/SCompanyDetails.jsx";
 import Otp from "../Pages/Auth/Otp.jsx";
 import UpdatePassword from "../Pages/Auth/UpdatePassword.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
+import AddQuestions from "../Pages/AddQuestions.jsx";
 
 
 // import Otp from "../Pages/Auth/Otp.jsx";
@@ -90,7 +91,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/add-project',
-                element: <AddProject />,
+                element: <AddQuestions/>,
             },
 
             {

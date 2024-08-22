@@ -6,17 +6,6 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
-// const storageWithLimit = {
-//     ...storage,
-//     setItem: (key, value) => {
-//       // Limit the size of stored data
-//       if (value.length > 1000000) { // Example limit of 1MB
-//         throw new Error('Storage limit exceeded');
-//       }
-//       return storage.setItem(key, value);
-//     }
-//   };
-  
 
 const persistConfig = {
     key: 'markus-survey',

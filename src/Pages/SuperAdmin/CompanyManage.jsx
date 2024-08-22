@@ -1,240 +1,288 @@
-import {Button, DatePicker, Form, Input, Modal, Radio, Select, Table} from 'antd';
-import React, { useState } from 'react'
-import { CiSearch } from 'react-icons/ci';
-import { FaEdit, FaRegEye, FaStar } from 'react-icons/fa';
-import { FaPlus } from 'react-icons/fa6';
-import { IoArrowBackSharp } from 'react-icons/io5';
-import { MdEdit, MdOutlineDelete } from 'react-icons/md';
+import {
+  Button,
+  Checkbox,
+  ConfigProvider,
+  Form,
+  Input,
+  Modal,
+  Table,
+  Upload,
+} from "antd";
+import { FaPlus } from "react-icons/fa6";
+import { IoArrowBackSharp } from "react-icons/io5";
+import { MdOutlineDelete } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
-import { Link } from 'react-router-dom';
-import '../../assets/css/style.css';
+import { Link } from "react-router-dom";
+import "../../assets/css/style.css";
+import React, { useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
 const dataSource = [
-    {
-        id: '1',
-        CompanyName: 'Mike',
-        CompanyId: 456,
-        email: 'xyz@gmail.com',
-        ToolUsed: 45,
-        NoOfProjects: 46,
-        NoSurveys: 78,
-    }
-]
-
+  {
+    id: "1",
+    CompanyName: "Mike",
+    CompanyId: 456,
+    email: "xyz@gmail.com",
+    ToolUsed: 45,
+    NoOfProjects: 46,
+    NoSurveys: 78,
+  },
+];
 
 const SCompanyManage = () => {
-    const [isPeriodically, setIsPeriodically] = useState(false);
-    const [openAddModal, setOpenAddModal] = useState(false)
-    const columns = [
-        {
-            title: 'SL No.',
-            dataIndex: 'id',
-            key: 'id',
-        },
-        {
-            title: 'Company Name',
-            dataIndex: 'CompanyName',
-            key: 'CompanyName ',
-        },
-        {
-            title: 'Company Id',
-            dataIndex: 'CompanyId',
-            key: 'CompanyId  ',
-        },
-        {
-            title: 'Company Email',
-            dataIndex: 'Email',
-            key: 'Email  ',
-        },
-        {
-            title: 'Tool Used',
-            dataIndex: 'ToolUsed',
-            key: 'ToolUsed  ',
-        },
+  const [isPeriodically, setIsPeriodically] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const onFinish = (values) => {
+    console.log("Success:", values);
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+  // const handleChange = (value) => {
+  //   console.log(`selected ${value}`);
+  // };
+  const columns = [
+    {
+      title: "SL No.",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Company Name",
+      dataIndex: "CompanyName",
+      key: "CompanyName ",
+    },
+    {
+      title: "Company Id",
+      dataIndex: "CompanyId",
+      key: "CompanyId  ",
+    },
+    {
+      title: "Company Email",
+      dataIndex: "Email",
+      key: "Email  ",
+    },
+    {
+      title: "Tool Used",
+      dataIndex: "ToolUsed",
+      key: "ToolUsed  ",
+    },
 
-        {
-            title: 'No of Projects',
-            dataIndex: 'NoOfProjects',
-            key: 'NoOfProjects  ',
-        },
-        {
-            title: 'No. of Surveys',
-            dataIndex: 'NoSurveys',
-            key: 'NoSurveys  ',
-        },
-        {
-            title: 'Actions',
-            dataIndex: 'key',
-            key: 'key',
-            render: (_, record) => {
-                return (<div className='start-center text-2xl gap-1 '>
-                    <IoEyeOutline  className='cursor-pointer' />
-                    <MdOutlineDelete className='cursor-pointer' />
-                </div>)
-            }
-        },
-    ];
-    const handleChange = (value) => {
-        console.log(`selected ${value}`);
-    };
-    const onFinish = (value) => {
+    {
+      title: "No of Projects",
+      dataIndex: "NoOfProjects",
+      key: "NoOfProjects  ",
+    },
+    {
+      title: "No. of Surveys",
+      dataIndex: "NoSurveys",
+      key: "NoSurveys  ",
+    },
+    {
+      title: "Actions",
+      dataIndex: "key",
+      key: "key",
+      render: (_, record) => {
+        return (
+          <div className="start-center text-2xl gap-1 ">
+            <IoEyeOutline className="cursor-pointer" />
+            <MdOutlineDelete className="cursor-pointer" />
+          </div>
+        );
+      },
+    },
+  ];
 
+  // Upload:
+  const [fileList, setFileList] = useState([]);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
     }
-    return (
-        <div className='bg-[var(--color-7)] rounded-md'>
-            <div className='between-center px-3 my-2 pt-5'>
-                <div className='start-center gap-2 mb-3 p-5'>
-                    <Link to={-1} className='bg-[var(--color-2)] py-1 px-2 rounded-md start-center gap-1 text-white'><IoArrowBackSharp />back</Link>
-                    <p className='text-xl'>Company Manage</p>
-                </div>
-                <div className='end-center gap-2'>
-                    {/*<Select className='h-[40px] bg-[var(--color-2)] rounded-md min-w-44'*/}
-                    {/*        defaultValue="lucy"*/}
-                    {/*        style={{ width: 120 }}*/}
-                    {/*        onChange={handleChange}*/}
-                    {/*        options={[*/}
-                    {/*            { value: 'jack', label: 'Jack' },*/}
-                    {/*            { value: 'lucy', label: 'Lucy' },*/}
-                    {/*            { value: 'Yiminghe', label: 'yiminghe' },*/}
-                    {/*        ]}*/}
-                    {/*/>*/}
-                    <button  onClick={() => setOpenAddModal(true)} className='bg-[var(--color-2)] px-4 rounded-md start-center gap-1 py-2 text-white flex justify-center items-center whitespace-nowrap'>
-                        Add Company
-                        <FaPlus />
-                    </button>
-                </div>
-            </div>
-            <Table dataSource={dataSource} columns={columns} />
-            <Modal
-                open={openAddModal}
-                centered
-                footer={false}
-                onCancel={() => setOpenAddModal(false)}
-            >
-                <div>
-                    <p className='text-xl py-2 font-bold'>Add Company</p>
-                    <Form className=''
-                          layout='vertical'
-                          onFinish={onFinish}
-                    >
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
 
-                        {/* Toggle Choice Option */}
-                        <Form.Item
-                            name="emojiOrStar"
-                            label=""
-                            rules={[
-                                {
-                                    message: 'Rating type is required',
-                                    required: true
-                                }
-                            ]}
-                        >
-                            <Radio.Group>
-                                <Radio value="emoji">Emoji</Radio>
-                                <Radio value="star">Star</Radio>
-                            </Radio.Group>
-                        </Form.Item>
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
 
-                        <Form.Item
-                            name={`surveyName`}
-                            label={`Survey Name`}
-                            rules={[
-                                {
-                                    message: 'Survey Name is required',
-                                    required: true
-                                }
-                            ]}
-                        >
-                            <Input className='pb-6 pt-2 border outline-none' placeholder='Type survey name here...'/>
-                        </Form.Item>
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 
-                        {/* Toggle Button for Once and Periodically */}
-                        <Form.Item
-                            name="status"
-                            label="Repeat Status"
-                        >
-                            <Button.Group className=''>
-                                <Button className='mr-2'
-                                        value="once"
-                                        onClick={() => setIsPeriodically(false)}
-                                >
-                                    Once
-                                </Button>
-                                <p  className='font-bold pr-3 mt-2'>Or</p>
-                                <Button className='ml-2'
-                                        value="periodically"
-                                        onClick={() => setIsPeriodically(true)}
-                                >
-                                    Periodically
-                                </Button>
-                            </Button.Group>
-                            {isPeriodically && (
-                                <Form.Item
-                                    name="period"
-                                    label=""
-                                    rules={[
-                                        {
-                                            message: 'Period is required',
-                                            required: true
-                                        }
-                                    ]}
-                                >
-                                    <Radio.Group className='pt-5'>
-                                        <Radio value="daily">Daily</Radio>
-                                        <Radio value="weekly">Weekly</Radio>
-                                        <Radio value="monthly">Monthly</Radio>
-                                    </Radio.Group>
-                                </Form.Item>
-                            )}
-                        </Form.Item>
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
-
-
-                        <div className='flex justify-between'>
-                            <Form.Item
-                                name="startDate"
-                                label="Start Date"
-                                rules={[
-                                    {
-                                        message: 'Start Date is required',
-                                        required: true
-                                    }
-                                ]}
-                                style={{ width: '48%' }}
-                            >
-                                <DatePicker
-                                    className='w-full pb-6 pt-2 border outline-none'
-                                    format='DD-MM-YYYY'
-                                    placeholder='Select Start Date'
-                                />
-                            </Form.Item>
-
-                            <Form.Item
-                                name="endDate"
-                                label="End Date"
-                                rules={[
-                                    {
-                                        message: 'End Date is required',
-                                        required: true
-                                    }
-                                ]}
-                                style={{ width: '48%' }}
-                            >
-                                <DatePicker
-                                    className='w-full pb-6 pt-2 border outline-none'
-                                    format='DD-MM-YYYY'
-                                    placeholder='Select End Date'
-                                />
-                            </Form.Item>
-                        </div>
-
-                        <button className='w-full py-2 bg-[var(--color-2)] text-white font-semibold rounded-md'>
-                            save
-                        </button>
-                    </Form>
-                </div>
-            </Modal>
+  return (
+    <div className="bg-[var(--color-7)] rounded-md">
+      <div className="between-center px-3 my-2 pt-5">
+        <div className="start-center gap-2 mb-3 p-5">
+          <Link
+            to={-1}
+            className="bg-[var(--color-2)] py-1 px-2 rounded-md start-center gap-1 text-white"
+          >
+            <IoArrowBackSharp />
+            back
+          </Link>
+          <p className="text-xl">Company Manage</p>
         </div>
-    )
-}
+        <div className="end-center gap-2">
+          <button
+            onClick={() => setOpenAddModal(true)}
+            className="bg-[var(--color-2)] px-4 rounded-md start-center gap-1 py-2 text-white flex justify-center items-center whitespace-nowrap"
+          >
+            Add Company
+            <FaPlus />
+          </button>
+        </div>
+      </div>
+      <Table dataSource={dataSource} columns={columns} />
 
-export default SCompanyManage
+      {/* modal: */}
+      <Modal
+        open={openAddModal}
+        centered
+        footer={false}
+        onCancel={() => setOpenAddModal(false)}
+      >
+        <div>
+          <p className="text-xl py-2 font-bold text-center my-10">
+            Add Company
+          </p>
+          <div className="my-10 flex justify-center items-center">
+          <Upload
+            name="avatar"
+            listType="picture-card"
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+          >
+            {fileList.length >= 1 ? null : uploadButton}
+          </Upload>
+          </div>
+      
+          <ConfigProvider
+            theme={{
+              components: {
+                Form: {
+                  itemMarginBottom: 20,
+                },
+                Input: {
+                  borderRadius: 0,
+                },
+              },
+            }}
+          >
+            <Form
+              name="basic"
+              labelCol={{
+                xs: 24,
+                sm: 24,
+                md: 24,
+              }}
+              wrapperCol={{
+                xs: 24,
+                sm: 24,
+                md: 24,
+              }}
+              style={{
+                maxWidth: "100%",
+                width: "800px",
+                margin: "0 auto",
+              }}
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <Form.Item
+                name="companyName"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Company Name!",
+                  },
+                ]}
+              >
+                <Input placeholder="Company Name" />
+              </Form.Item>
+              <Form.Item
+                name="companyId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your companyId!",
+                  },
+                ]}
+              >
+                <Input placeholder="Company Id" />
+              </Form.Item>
+              <Form.Item
+                name="companyAddrerss"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your company Address!",
+                  },
+                ]}
+              >
+                <Input placeholder="Company Address" />
+              </Form.Item>
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Email!",
+                  },
+                ]}
+              >
+                <Input placeholder="Email" />
+              </Form.Item>
+              <Form.Item
+                name="phoneNumber"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Phone Number!",
+                  },
+                ]}
+              >
+                <Input placeholder="Phone Number" />
+              </Form.Item>
+
+              <Form.Item
+                name="remember"
+                valuePropName="checked"
+                wrapperCol={{
+                  span: 16,
+                }}
+              ></Form.Item>
+              <p className="my-2">Unlock Tools</p>
+              <Checkbox>Survey</Checkbox>
+              <Form.Item
+                wrapperCol={{
+                  span: 16,
+                }}
+              >
+                <button className="bg-[#ecb206] w-96 py-3 mt-5 rounded ">
+                  Submit
+                </button>
+              </Form.Item>
+            </Form>
+          </ConfigProvider>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+export default SCompanyManage;

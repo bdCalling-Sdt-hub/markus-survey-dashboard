@@ -71,7 +71,7 @@ const ManageCompany = () => {
                     <Link to={`/project-details/${record.key}`}>
                         <FaRegEye className='cursor-pointer' />
                     </Link>
-                    <Link to={`/add-project/${record.key}`}>
+                    <Link to={`/edit-survey-question/${record.key}`}>
                         <FaEdit className='cursor-pointer' />
                     </Link>
                 </div>

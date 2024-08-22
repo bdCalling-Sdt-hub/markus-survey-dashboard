@@ -19,13 +19,7 @@ const AddProject = () => {
                     <Link to={-1} className='bg-[var(--color-2)] py-1 px-2 rounded-md start-center gap-1 text-white'><IoArrowBackSharp />back</Link>
                     <p className='text-xl'>Company Manage</p>
                 </div>
-                {/* <div className='end-center gap-2'>
-                    <Input className='max-w-[250px] h-10' prefix={<CiSearch className='text-2xl' />} placeholder="Search" />
-                    <button onClick={() => setOpenAddModal(true)} className='bg-[var(--color-2)] px-4 rounded-md start-center gap-1 py-2 text-white flex justify-center items-center whitespace-nowrap'>
-                        Add New Project
-                        <FaPlus />
-                    </button>
-                </div> */}
+
             </div>
             <Form className=''
                 layout='vertical'

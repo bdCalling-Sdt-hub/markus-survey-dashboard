@@ -30,6 +30,7 @@ import Otp from "../Pages/Auth/Otp.jsx";
 import UpdatePassword from "../Pages/Auth/UpdatePassword.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import AddQuestions from "../Pages/AddQuestions.jsx";
+import EditSurveyQuestions from "../Pages/EditSurveyQuestions.jsx";
 
 
 // import Otp from "../Pages/Auth/Otp.jsx";
@@ -102,6 +103,10 @@ export const router = createBrowserRouter([
             {
                 path: '/notification',
                 element: <Notification />,
+            },
+            {
+                path: '/edit-survey-question/:id',
+                element: <EditSurveyQuestions></EditSurveyQuestions>,
             },
 
             {

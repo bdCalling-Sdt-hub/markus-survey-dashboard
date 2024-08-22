@@ -31,6 +31,7 @@ import UpdatePassword from "../Pages/Auth/UpdatePassword.jsx";
 import SurveyQuestions from "../Pages/SurveyPages/SurveyQuestions.jsx";
 import ThankYouPage from "../Pages/SurveyPages/ThankYouPage.jsx";
 import AllQuestionAnsPage from "../Pages/SurveyPages/AllQuestionAnsPage.jsx";
+import SelectLanguagePage from "../Pages/SurveyPages/SelectLanguagePage.jsx";
 // import Otp from "../Pages/Auth/Otp.jsx";
 
 export const router = createBrowserRouter([
@@ -125,7 +126,7 @@ export const router = createBrowserRouter([
         path: "/survey-user/id",
         element: <SurveyBasedUser />,
       },
-      
+
       // super admin dashboard pages
       {
         path: "/super-admin",
@@ -161,16 +162,20 @@ export const router = createBrowserRouter([
     element: <UpdatePassword />,
   },
   // Survey Questions :
+{
+path:"/selectLanguagePage",
+element:<SelectLanguagePage/>
+},
   {
     path: "/surveyQuestions",
     element: <SurveyQuestions />,
   },
   {
     path: "/thankYouPage",
-    element: <ThankYouPage/>,
+    element: <ThankYouPage />,
   },
   {
     path: "/allQuestionAnsPage",
-    element:<AllQuestionAnsPage/>,
+    element: <AllQuestionAnsPage />,
   },
 ]);

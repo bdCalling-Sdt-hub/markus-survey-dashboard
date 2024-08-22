@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import smile from "../../assets/images/smile.png";
 import angry from "../../assets/images/angry.png";
@@ -10,11 +10,18 @@ import commentImg from "../../assets/images/comment.png";
 import { Progress } from "antd";
 import { ConfigProvider, Form, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+// import { useTranslateTextQuery } from "../../redux/translateApi";
+// import { getFromLocalStorage } from "../../utils/local-storage";
+// import googleTranslate from 'google-translate';
+
+// const apiKey = 'AIzaSyAjiUy3TvN_HXlFhyT38srvm8mrUkf-g7w';
+// const options = {}; // Add your options here
 
 export default function SurveyQuestions() {
+  // const language = getFromLocalStorage("language");
   // i18 next
-  const { t,i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState("en");
   // others:
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -23,15 +30,27 @@ export default function SurveyQuestions() {
   const [answers, setAnswers] = useState({});
   const navigate = useNavigate();
 
+//  useEffect(() => {
+//   const translateText = async (text, targetLanguage) => {
+//     try {
+//       const translate = googleTranslate(apiKey, options);
+//       const [translation] = await translate.translate(text, targetLanguage);
+//       console.log(translation.translatedText);
+//       // => Mi nombre es Brandon
+//     } catch (error) {
+//       console.error('Error translating text:', error);
+//     }
+//   };
+  
+//   translateText('My name is Brandon', 'es');
+//  }, [])
+ 
+//   console.log(data, "data");
+
   const starOption = false;
   // const starOption = true;
 
-  const questions = [
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 }
-  ];
+  const questions = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
   const handleAnswerClick = (answer, displayValue) => {
     setSelectedAnswer(displayValue);
@@ -40,25 +59,32 @@ export default function SurveyQuestions() {
 
   const handleNextClick = () => {
     if (selectedAnswer) {
-      setAnswers((prevAnswers) => ({
-        ...prevAnswers,
+      // Update the answers state
+      const updatedAnswers = {
+        ...answers,
         [questions[currentQuestion].id]: selectedAnswer,
-      }));
+      };
+      setAnswers(updatedAnswers);
+
+      // Update the progress bar
       const newProgress = ((currentQuestion + 1) / questions.length) * 100;
       setProgress(newProgress);
-  
+
       if (currentQuestion < questions.length - 1) {
+        // Move to the next question
         setCurrentQuestion(currentQuestion + 1);
         setSelectedAnswer(null);
       } else {
-        console.log("Survey completed!", answers);
-        navigate("/allQuestionAnsPage", { state: { questions, answers } });
+        // Navigate to the next page with all the answers
+        console.log("Survey completed!", updatedAnswers);
+        navigate("/allQuestionAnsPage", {
+          state: { questions, answers: updatedAnswers },
+        });
       }
     } else {
       alert("Please select an answer before proceeding.");
     }
   };
-  
 
   const handleQuitClick = () => {
     navigate("/thankYouPage");
@@ -138,29 +164,33 @@ export default function SurveyQuestions() {
         }}
       >
         <h1 className="text-3xl text-center my-12">Survey</h1>
-       {/* Translator div start */}
-       <div className="flex justify-end px-14 items-center">
-        <div className="flex gap-5 justify-center items-center border-2 rounded-3xl py-2 px-3 border-[#ecb206]">
-          <button
-            className={`py-1 px-3 ${i18n.language === 'en' ? 'font-bold border-b-2 border-b-red-500' : ''}`}
-            onClick={() => i18n.changeLanguage('en')}
-          >
-            Eng
-          </button>
-          <button
-            className={`py-1 px-3 ${i18n.language === 'de' ? 'font-bold border-b-2 border-b-red-500' : ''}`}
-            onClick={() => i18n.changeLanguage('de')}
-          >
-            De
-          </button>
+        {/* Translator div start */}
+        <div className="flex justify-end px-14 items-center">
+          <div className="flex gap-5 justify-center items-center border-2 rounded-3xl py-2 px-3 border-[#ecb206]">
+            <button
+              className={`py-1 px-3 ${
+                i18n.language === "en" ? "font-bold text-[#ecb206]" : ""
+              }`}
+              onClick={() => i18n.changeLanguage("en")}
+            >
+              Eng
+            </button>
+            <button
+              className={`py-1 px-3 ${
+                i18n.language === "de" ? "font-bold text-[#ecb206]" : ""
+              }`}
+              onClick={() => i18n.changeLanguage("de")}
+            >
+              De
+            </button>
+          </div>
         </div>
-      </div>
-      {/* Translator div end */}
-      <div>
-        <p className="text-center mt-10 px-5">
-          {t(`questions.${questions[currentQuestion].id}`)}
-        </p>
-      </div>
+        {/* Translator div end */}
+        <div>
+          <p className="text-center mt-10 px-5">
+            {t(`questions.${questions[currentQuestion].id}`)}
+          </p>
+        </div>
         {starOption ? renderStars() : renderEmojis()}
         <div className="p-5  w-11/12 mx-auto">
           <p>Total Questions: {questions.length} </p>

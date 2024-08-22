@@ -6,6 +6,14 @@ const baseApi = createApi({
     baseUrl: "http://115.127.156.13:7000/api",
   }),
   endpoints: (builder) => ({
+    loginUser: builder.mutation({
+      query: (credentials) => ({
+        url: "/login",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+
     setForgetPass: builder.mutation({
       query: (values) => ({
         url: "/forget-pass",
@@ -37,6 +45,6 @@ const baseApi = createApi({
   }),
 });
 
-export const { useSetForgetPassMutation, useSetvarificationCodeMutation,useSetResendCodeMutation,useSetResetPassMutation } =
+export const {useLoginUserMutation, useSetForgetPassMutation, useSetvarificationCodeMutation,useSetResendCodeMutation,useSetResetPassMutation } =
   baseApi;
 export default baseApi;

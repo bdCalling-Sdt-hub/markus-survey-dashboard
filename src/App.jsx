@@ -4,6 +4,7 @@ import './App.css'
 import Overview from './Components/Dashboard/Overview'
 import DriverGrowth from './Components/Dashboard/DriverGrowth'
 import SurveyRequest from './Components/Dashboard/SurveyRequest'
+import SurveyQuestions from './Pages/SurveyPages/SurveyQuestions'
 
 
 
@@ -49,6 +50,7 @@ function App() {
         </div>
         <SurveyRequest />
       </div>
+   
     </>
   )
 }

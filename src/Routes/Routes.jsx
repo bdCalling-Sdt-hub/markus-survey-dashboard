@@ -35,7 +35,6 @@ import EditSurveyQuestions from "../Pages/EditSurveyQuestions.jsx";
 
 // import Otp from "../Pages/Auth/Otp.jsx";
 
-
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -95,77 +94,93 @@ export const router = createBrowserRouter([
                 element: <AddQuestions/>,
             },
 
-            {
-                path: '/survey-result',
-                element: <SurveyResult />,
-            },
+      {
+        path: "/survey-result",
+        element: <SurveyResult />,
+      },
 
-            {
-                path: '/notification',
-                element: <Notification />,
-            },
+      {
+        path: "/notification",
+        element: <Notification />,
+      },
             {
                 path: '/edit-survey-question/:id',
                 element: <EditSurveyQuestions></EditSurveyQuestions>,
             },
 
-            {
-                path: '/project-details/:id',
-                element: <ProjectDetails />,
-            },
+      {
+        path: "/project-details/:id",
+        element: <ProjectDetails />,
+      },
 
-            {
-                path: '/project-users/:id',
-                element: <ProjectUsers/>,
-            },
-            {
-                path: '/survey-comments/:id',
-                element: <SurveyComment/>,
-            },
+      {
+        path: "/project-users/:id",
+        element: <ProjectUsers />,
+      },
+      {
+        path: "/survey-comments/:id",
+        element: <SurveyComment />,
+      },
 
-            {
-                path: '/line-chart/id',
-                element: <chart/>,
-            },
+      {
+        path: "/line-chart/id",
+        element: <chart />,
+      },
 
-            {
-                path: '/survey-user/id',
-                element: <SurveyBasedUser/>,
-            },
+      {
+        path: "/survey-user/id",
+        element: <SurveyBasedUser />,
+      },
 
-            // super admin dashboard pages
-            {
-                path: '/super-admin',
-                element: <SuperAdminDashboard/>,
-            },
+      // super admin dashboard pages
+      {
+        path: "/super-admin",
+        element: <SuperAdminDashboard />,
+      },
 
-            {
-                path: '/super-admin/company-manage',
-                element: <SCompanyManage />,
-            },
+      {
+        path: "/super-admin/company-manage",
+        element: <SCompanyManage />,
+      },
 
-            {
-                path: '/super-admin/company-details',
-                element: <SCompanyDetails />,
-            },
+      {
+        path: "/super-admin/company-details",
+        element: <SCompanyDetails />,
+      },
+    ],
+  },
+  {
+    path: "/auth/login",
+    element: <Login />,
+  },
+  {
+    path: "/auth/forgot-password",
+    element: <ForgotPassword />,
+  },
 
-        ]
-    },
-    {
-        path: '/auth/login',
-        element: <Login/>
-    },
-    {
-        path: '/auth/forgot-password',
-        element: <ForgotPassword/>
-    },
-
-    {
-        path: '/auth/otp',
-        element: <Otp/>
-    },
-    {
-        path: '/auth/update-password',
-        element: <UpdatePassword/>
-    }
+  {
+    path: "/auth/otp",
+    element: <Otp />,
+  },
+  {
+    path: "/auth/update-password",
+    element: <UpdatePassword />,
+  },
+  // Survey Questions :
+{
+path:"/selectLanguagePage",
+element:<SelectLanguagePage/>
+},
+  {
+    path: "/surveyQuestions",
+    element: <SurveyQuestions />,
+  },
+  {
+    path: "/thankYouPage",
+    element: <ThankYouPage />,
+  },
+  {
+    path: "/allQuestionAnsPage",
+    element: <AllQuestionAnsPage />,
+  },
 ]);

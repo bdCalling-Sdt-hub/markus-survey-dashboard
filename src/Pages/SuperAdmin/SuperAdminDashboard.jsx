@@ -43,7 +43,7 @@ const SuperAdminDashboard = () => {
             </div>
             <div className='mt-3 bg-white rounded-md'>
                 <div className='between-center gap-2 mb-3 p-5'>
-                    <p className='text-xl'>User Delete Request</p> <Link to={`/total-survey-request`}>
+                    <p className='text-xl'>Company Name</p> <Link to={`/total-survey-request`}>
                     View All
                 </Link>
                 </div>

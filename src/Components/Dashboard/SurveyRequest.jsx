@@ -1,7 +1,7 @@
 import { Input, Modal, Table } from 'antd';
 import React, { useState } from 'react'
 import { CiSearch } from 'react-icons/ci';
-import {FaEdit, FaRegEye, FaStar} from 'react-icons/fa';
+import { FaEdit, FaRegEye, FaStar } from 'react-icons/fa';
 import { MdEdit, MdOutlineDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 const dataSource = [
@@ -45,9 +45,10 @@ const sarvayData = [
     { name: 'Customer Feedback', id: '9' },
 ]
 const SurveyRequest = () => {
+    
     const [openAllowModal, setOpenAllowModal] = useState(false)
     const [selectedID, setSelectedID] = useState([])
-    // console.log(openAllowModal)
+
     const columns = [
         {
             title: 'Serial No',
@@ -55,57 +56,44 @@ const SurveyRequest = () => {
             key: 'key',
         },
         {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email  ',
+        },
+        {
             title: 'User',
             dataIndex: 'name',
             key: 'name',
             render: (_, record) => {
                 return (<div className='start-center gap-2'>
-                    <img src={record?.img} className='w-[40px] h-[40px] rounded-full' alt="" />
+                    <img src={record?.img} className='w-[40px] h-[40px] rounded-sm' alt="" />
                     <p className='font-medium'>{record?.name}</p>
                 </div>)
             }
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email  ',
         },
 
         {
             title: 'Request',
             dataIndex: 'key',
+            align: "right",
             key: 'key',
             render: (_, record) => {
                 return (<div className='start-center gap-1'>
                     <button onClick={() => setOpenAllowModal(true)} className='px-4 py-2 rounded-3xl text-white font-semibold bg-green-600'> Allow </button>
                     <button className='px-4 py-2 rounded-3xl text-white font-semibold bg-red-600'> Cancel </button>
                 </div>)
-            }
-        },
+            },
 
-        {
-            title: 'Actions',
-            dataIndex: 'key',
-            key: 'key',
-            // render: (_, record) => {
-            //     return (<div className='start-center gap-1'>
-            //         <button onClick={() => setOpenAllowModal(true)} className='px-4 py-2 rounded-3xl text-white font-semibold bg-green-600'> Allow </button>
-            //     </div>)
-            // }
-            render: (_, record) => {
-                return (<div onClick={() => setOpenAllowModal(true)} className='start-center text-2xl gap-1'>
-                    {/*<Link to={`/add-project`}>*/}
-                        <FaEdit className='cursor-pointer'/>
-                    {/*</Link>*/}
-                </div>)
-            }
         },
-
 
     ];
+
+
+
+
     return (
-        <div className='bg-[var(--color-7)] rounded-md'>
-            <Table dataSource={dataSource} columns={columns} />
+        <div className='bg-[var(--color-7)] rounded-md mb-8'>
+            <Table className='dashboard-custom-table' pagination={false} dataSource={dataSource} columns={columns} />
             <Modal
                 centered
                 footer={false}
@@ -138,4 +126,4 @@ const SurveyRequest = () => {
     )
 }
 
-export default SurveyRequest
+export default SurveyRequest;

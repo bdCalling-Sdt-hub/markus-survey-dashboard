@@ -99,9 +99,8 @@ const DriverGrowth = () => {
                             bottom: 0,
                         }}
                     >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
+                        <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={10}/>
+                        <YAxis tickLine={false} axisLine={false} />
                         <Tooltip />
                         <Area type="monotone" dataKey="uv" stroke="#ECB206" opacity={1} fillOpacity={1} fill="#ECB206" />
                     </AreaChart>

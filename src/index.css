@@ -62,6 +62,56 @@
 /* .questions .ant-space-item{
 width: 38% !important;
 } */
+.dashboard-custom-table .start-center {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+.custom-pagination-all .ant-pagination .ant-pagination-item-active {
+  border: none;
+  background-color: #38393e17;
+  border-radius: 50%;
+}
+.custom-pagination-all .ant-pagination .ant-pagination-item-active a {
+  color: black
+}
+.custom-pagination-all ul.ant-pagination.ant-table-pagination.ant-table-pagination-right.css-dev-only-do-not-override-98ntnt {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+:where(.css-dev-only-do-not-override-98ntnt).ant-pagination-end {
+  justify-content: center;
+  margin-top: 30px;
+}
 
+:where(.css-dev-only-do-not-override-98ntnt).ant-pagination .ant-pagination-options-size-changer {
+  display: none;
+  width: auto;
+}
+:where(.css-dev-only-do-not-override-98ntnt).ant-pagination .ant-pagination-item-active {
+  border-color: #4096ff00;
+  background-color: #0000000d;
+  border-radius: 50%;
+}
+:where(.css-dev-only-do-not-override-98ntnt).ant-pagination .ant-pagination-item-active a {
+  color: black;
+}
 
+:where(.css-dev-only-do-not-override-98ntnt).ant-pagination .ant-pagination-item-active:hover {
+  border-color: #4096ff00;
+  background-color: #0000000d;
+  border-radius: 50%;
+}
+ul.ant-pagination.custom-pagination-all.css-dev-only-do-not-override-98ntnt {
+  justify-content: center;
+}
+/* .custom-table */
+/* ReCharts */
+.recharts-legend-wrapper {
+  display: none;
+}
 
+.gap-5 {
+  gap: .5rem;
+}

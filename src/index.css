@@ -111,3 +111,7 @@ ul.ant-pagination.custom-pagination-all.css-dev-only-do-not-override-98ntnt {
 .recharts-legend-wrapper {
   display: none;
 }
+
+.gap-5 {
+  gap: .5rem;
+}

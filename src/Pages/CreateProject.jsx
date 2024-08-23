@@ -122,7 +122,7 @@ const CreateProject = () => {
             </div>
 
             {getProjectLoading || isLoading || deleteLoading ? (
-                <div className='h-full flex items-center justify-center'>
+                <div className='h-[500px] flex items-center justify-center'>
                     <ConfigProvider
                         theme={{
                             token: {

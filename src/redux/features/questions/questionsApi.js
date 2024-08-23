@@ -12,6 +12,14 @@ export const surveyAPi = baseApi.injectEndpoints({
                 }
             }
         }),
+        getSurveyBasedQuestion: builder.query({
+            query: (id) => {
+                return {
+                    url: `questions/${id}`,
+                    method: "GET",
+                }
+            }
+        }),
         getProjectForManageCompany: builder.query({
             query: ({page}) => {
                 return {
@@ -28,7 +36,8 @@ export const surveyAPi = baseApi.injectEndpoints({
                 }
             }
         }),
+
     }),
 })
 
-export const { useCreateQuestionsMutation, useGetProjectForManageCompanyQuery, useGetSurveyForManageCompanyQuery } = surveyAPi;
+export const { useCreateQuestionsMutation, useGetSurveyBasedQuestionQuery, useGetProjectForManageCompanyQuery, useGetSurveyForManageCompanyQuery } = surveyAPi;

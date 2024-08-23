@@ -4,18 +4,18 @@ import { CiSearch } from 'react-icons/ci';
 import { FaEdit, FaRegEye } from 'react-icons/fa';
 import { FaPlus } from 'react-icons/fa6';
 import { IoArrowBackSharp } from 'react-icons/io5';
-import { MdOutlineDelete } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useGetCompanySurveyQuery } from '../redux/features/manageCompany/manageCompanyApi';
 
 const ManageCompany = () => {
 
-
+    const [searchTerm, setSearchTerm] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10;
 
     const { data, isLoading } = useGetCompanySurveyQuery({
-        page: currentPage
+        page: currentPage,
+        search: searchTerm,
     });
 
     const handlePageChange = (page) => {
@@ -89,7 +89,7 @@ const ManageCompany = () => {
                     <p className='text-xl'>Company Manage</p>
                 </div>
                 <div className='end-center gap-2'>
-                    <Input className='max-w-[250px] h-10' prefix={<CiSearch className='text-2xl' />} placeholder="Search" />
+                    <Input  onChange={(e) => setSearchTerm(e.target.value)} className='max-w-[250px] h-10' prefix={<CiSearch className='text-2xl' />} placeholder="Search" />
                     <Link to={`/add-project`} className='bg-[var(--color-2)] px-4 rounded-md start-center gap-1 py-2 text-white flex justify-center items-center whitespace-nowrap'>
                         Add New Project
                         <FaPlus />

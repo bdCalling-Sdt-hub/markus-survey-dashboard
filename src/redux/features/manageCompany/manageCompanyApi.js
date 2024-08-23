@@ -21,9 +21,11 @@ export const manageCompanyApi = baseApi.injectEndpoints({
         //     invalidatesTags: ['Survey'],
         // }),
         getCompanySurvey: builder.query({
-            query: ({page}) => {
+            
+            query: ({page, search}) => {
+                const query = search ? `?search=${search}` : `?page=${page}`;
                 return {
-                    url: `questions?page=${page}`,
+                    url: `questions${query}`,
                     method: "GET",
                 }
             },

@@ -14,12 +14,6 @@ const ProjectDetails = () => {
     console.log(id)
 
     const { data: report, isLoading } = useSurveyReportQuery(id);
-    console.log(report?.project?.project_name)
-    console.log(report?.answer_counts)
-    console.log(report)
-
-
-
 
 
     const data = ['https://i.ibb.co/0sF5Fk3/images-19.jpg', 'https://i.ibb.co/YpR8Mbw/Ellipse-307.png', 'https://i.ibb.co/JFZhZ7m/Ellipse-311.png', 'https://i.ibb.co/5cXN4Bw/Ellipse-310.png', 'https://i.ibb.co/gz2CbVj/1-intro-photo-final.jpg', 'https://i.ibb.co/7xc44sq/profile-picture-smiling-young-african-260nw-1873784920.webp', 'https://i.ibb.co/sQPHfnR/images-20.jpg']

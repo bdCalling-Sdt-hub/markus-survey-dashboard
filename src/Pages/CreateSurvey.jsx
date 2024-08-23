@@ -159,7 +159,7 @@ const CreateSurvey = () => {
 
 
             {
-                deleteLoading || isLoading ? <div className=' h-full flex items-center justify-center'>
+                deleteLoading || isLoading ? <div className=' h-[500px] flex items-center justify-center'>
                     <ConfigProvider
                         theme={{
                             token: {

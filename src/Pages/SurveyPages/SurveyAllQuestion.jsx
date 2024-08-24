@@ -11,18 +11,43 @@ import { Progress, Select } from "antd";
 import { ConfigProvider, Form, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import translateText from "../../translateText";
+import { useGetSurveyQNQuery } from "../../redux/api/baseapi";
 const SurveyQuestions = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [answers, setAnswers] = useState({});
-  const [translatedQuestion, setTranslatedQuestion] = useState("");
-  const [language, setLanguage] = useState(localStorage.getItem("language") || "de"); // Default to 'de'
-  const navigate = useNavigate();
-  const { Option } = Select;
-  const emoji = true;
+  // // RTK start
+  const {
+    data: surveyQueryQN,
+    isLoading,
+    isError,
+    error,
+  } = useGetSurveyQNQuery({});
+  console.log(surveyQueryQN);
 
-  // List of questions
+  if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  // const { data: surveyData, error, isLoading } = useGetSurveyQuery(surveyId);
+
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error.message}</p>;
+
+  // const questions = surveyData?.survey?.survey?.questions;
+
+  // if (!Array.isArray(questions) || questions.length === 0) {
+  //   return <p>No questions available</p>;
+  // }
+
+
+  // // RTK end
+  if (Array.isArray(surveyQueryQN?.survey?.survey?.questions)) {
+    surveyQueryQN.survey.survey.questions.forEach((question) => {
+      console.log(question.question_en);
+      // const questions = question.question_en;
+    });
+  } else {
+    console.log("");
+  }
+
   const questions = {
     1: "How satisfied are you with your current work environment?",
     2: "How would you rate the support you receive from your team?",
@@ -30,19 +55,33 @@ const SurveyQuestions = () => {
     4: "How do you feel about your workload?",
   };
 
+  
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [answers, setAnswers] = useState({});
+  const [translatedQuestion, setTranslatedQuestion] = useState("");
+  const [language, setLanguage] = useState(
+    localStorage.getItem("language") || "de"
+  ); // Default to 'german'
+  const navigate = useNavigate();
+  const { Option } = Select;
+  const emoji = true;
 
   // Translate text on component mount and language change
   useEffect(() => {
     const fetchTranslation = async () => {
       const questionText = questions[currentQuestion + 1];
-      const translated = await translateText(questionText, language, import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY); // Replace with  API key
+      const translated = await translateText(
+        questionText,
+        language,
+        import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY
+      ); // Replace with  API key
       setTranslatedQuestion(translated || questionText);
     };
 
-
     fetchTranslation();
   }, [currentQuestion, language]);
-
 
   // Handle language change
   const handleLanguageChange = (value) => {
@@ -50,12 +89,10 @@ const SurveyQuestions = () => {
     setLanguage(value);
   };
 
-
   const handleAnswerClick = (answer, displayValue) => {
     setSelectedAnswer(displayValue);
     console.log(`Selected: ${displayValue}`);
   };
-
 
   const handleNextClick = () => {
     if (selectedAnswer) {
@@ -65,29 +102,27 @@ const SurveyQuestions = () => {
       };
       setAnswers(updatedAnswers);
 
-
-      const newProgress = ((currentQuestion + 1) / Object.keys(questions).length) * 100;
+      const newProgress =
+        ((currentQuestion + 1) / Object.keys(questions).length) * 100;
       setProgress(newProgress);
-
 
       if (currentQuestion < Object.keys(questions).length - 1) {
         setCurrentQuestion(currentQuestion + 1);
         setSelectedAnswer(null);
       } else {
-        console.log("Survey completed!", updatedAnswers);
-        navigate("/allQuestionAnsPage", { state: { questions, updatedAnswers, language, emoji } });
-
+        // console.log("Survey completed!", updatedAnswers);
+        navigate("/allQuestionAnsPage", {
+          state: { questions, updatedAnswers, language, emoji },
+        });
       }
     } else {
       alert("Please select an answer before proceeding.");
     }
   };
 
-
   const handleQuitClick = () => {
     navigate("/thankYouPage");
   };
-
 
   const renderStars = () => (
     <div className="flex gap-5 justify-center items-center my-12">
@@ -102,7 +137,6 @@ const SurveyQuestions = () => {
       ))}
     </div>
   );
-
 
   // Render emoji rating
   const renderEmojis = () => (
@@ -140,7 +174,6 @@ const SurveyQuestions = () => {
     </div>
   );
 
-
   return (
     <div className="container mx-auto bg-[fdfdfd] my-24">
       <ConfigProvider
@@ -160,9 +193,8 @@ const SurveyQuestions = () => {
       >
         <h1 className="text-3xl text-center my-12">Survey</h1>
 
-
-         {/* Language Selector */}
-         <div className="flex justify-end px-14 items-center">
+        {/* Language Selector */}
+        <div className="flex justify-end px-14 items-center">
           <Select
             defaultValue={language}
             style={{ width: 120 }}
@@ -280,22 +312,17 @@ const SurveyQuestions = () => {
           </Select>
         </div>
 
-
-
         <div>
           <p className="text-center mt-10 px-5">{translatedQuestion}</p>
         </div>
 
-
-            {/* Render Stars or Emojis based on the emoji flag */}
-            {emoji ? renderEmojis() : renderStars()}
-
+        {/* Render Stars or Emojis based on the emoji flag */}
+        {emoji ? renderEmojis() : renderStars()}
 
         <div className="p-5 w-11/12 mx-auto">
           <p>Total Questions: {Object.keys(questions).length} </p>
           <Progress percent={progress} status="active" />
         </div>
-
 
         <Form
           name="basic"
@@ -323,7 +350,6 @@ const SurveyQuestions = () => {
         </Form>
       </ConfigProvider>
 
-
       <div className="flex flex-col gap-5 justify-center items-center my-8">
         <button
           className="py-2 w-44 bg-[#ecb206] text-white rounded-md"
@@ -341,6 +367,5 @@ const SurveyQuestions = () => {
     </div>
   );
 };
-
 
 export default SurveyQuestions;

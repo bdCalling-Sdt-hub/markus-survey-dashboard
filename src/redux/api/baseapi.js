@@ -6,6 +6,11 @@ const baseApi = createApi({
     baseUrl: "http://115.127.156.13:7000/api",
   }),
   endpoints: (builder) => ({
+   getSurveyQN: builder.query({
+      query: () => "/single-surveys-questions/7e8f18c7-540e-4faa-b818-f08c3335e586",
+    }),
+
+
     loginUser: builder.mutation({
       query: (credentials) => ({
         url: "/login",
@@ -13,7 +18,6 @@ const baseApi = createApi({
         body: credentials,
       }),
     }),
-
     setForgetPass: builder.mutation({
       query: (values) => ({
         url: "/forget-pass",
@@ -45,6 +49,6 @@ const baseApi = createApi({
   }),
 });
 
-export const {useLoginUserMutation, useSetForgetPassMutation, useSetvarificationCodeMutation,useSetResendCodeMutation,useSetResetPassMutation } =
+export const {useGetSurveyQNQuery,useLoginUserMutation, useSetForgetPassMutation, useSetvarificationCodeMutation,useSetResendCodeMutation,useSetResetPassMutation } =
   baseApi;
 export default baseApi;

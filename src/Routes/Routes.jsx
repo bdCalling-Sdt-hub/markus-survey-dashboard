@@ -168,10 +168,10 @@ export const router = createBrowserRouter([
 path:"/selectLanguagePage",
 element:<SelectLanguagePage/>
 },
-  {
-    path: "/surveyQuestions",
-    element: <SurveyQuestions />,
-  },
+  // {
+  //   path: "/surveyQuestions",
+  //   element: <SurveyQuestions />,
+  // },
   {
     path: "/surveyAllQuestions",
     element: <SurveyAllQuestions />,

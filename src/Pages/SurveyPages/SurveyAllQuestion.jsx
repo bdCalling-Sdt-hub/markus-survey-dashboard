@@ -20,7 +20,7 @@ const SurveyQuestions = () => {
   const [language, setLanguage] = useState(localStorage.getItem("language") || "de"); // Default to 'de'
   const navigate = useNavigate();
   const { Option } = Select;
-  const emoji = false;
+  const emoji = true;
 
   // List of questions
   const questions = {
@@ -75,9 +75,8 @@ const SurveyQuestions = () => {
         setSelectedAnswer(null);
       } else {
         console.log("Survey completed!", updatedAnswers);
-        navigate("/allQuestionAnsPage", {
-          state: { questions: Object.keys(questions), answers: updatedAnswers },
-        });
+        navigate("/allQuestionAnsPage", { state: { questions, updatedAnswers, language, emoji } });
+
       }
     } else {
       alert("Please select an answer before proceeding.");

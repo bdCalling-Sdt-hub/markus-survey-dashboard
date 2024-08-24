@@ -17,7 +17,7 @@ export default function SelectLanguagePage() {
 
   const handleContinue = () => {
     if (isLanguageSelected) {
-      navigate("/surveyQuestions");
+      navigate("/surveyAllQuestions");
     }
   };
 

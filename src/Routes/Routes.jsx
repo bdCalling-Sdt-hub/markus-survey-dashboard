@@ -32,6 +32,8 @@ import SurveyQuestions from "../Pages/SurveyPages/SurveyQuestions.jsx";
 import ThankYouPage from "../Pages/SurveyPages/ThankYouPage.jsx";
 import AllQuestionAnsPage from "../Pages/SurveyPages/AllQuestionAnsPage.jsx";
 import SelectLanguagePage from "../Pages/SurveyPages/SelectLanguagePage.jsx";
+import TranslateComponent from "../Pages/SurveyPages/TranslateComponent.jsx";
+import SurveyAllQuestions from "../Pages/SurveyPages/SurveyAllQuestion.jsx";
 // import Otp from "../Pages/Auth/Otp.jsx";
 
 export const router = createBrowserRouter([
@@ -171,11 +173,19 @@ element:<SelectLanguagePage/>
     element: <SurveyQuestions />,
   },
   {
+    path: "/surveyAllQuestions",
+    element: <SurveyAllQuestions />,
+  },
+  {
     path: "/thankYouPage",
     element: <ThankYouPage />,
   },
   {
     path: "/allQuestionAnsPage",
     element: <AllQuestionAnsPage />,
+  },
+  {
+    path: "/translateComponent",
+    element: <TranslateComponent/>,
   },
 ]);

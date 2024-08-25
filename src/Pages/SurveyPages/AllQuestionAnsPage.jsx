@@ -8,34 +8,36 @@ import sad from "../../assets/images/sad.png";
 import blushing from "../../assets/images/blushing.png";
 import starImage from "../../assets/images/star.png";
 import translateText from "../../translateText";
+import {
+  useGetAllQnAnsQuery,
+} from "../../redux/api/baseapi";
 
 export default function AllQuestionAnsPage() {
   const selectedlanguage = localStorage.getItem("language") || "de";
+  const [translatedQuestions, setTranslatedQuestions] = useState({});
+  const { data: allQn } = useGetAllQnAnsQuery();
+  // console.log(allQn);
   const navigate = useNavigate();
   const location = useLocation();
   const {
-    questions = {},
+    SVquestions = [],
     updatedAnswers = {},
     language = selectedlanguage,
     emoji = true,
   } = location.state || {};
-  // console.log("updatedAnswers Object:", updatedAnswers);
 
 
-
-  const [translatedQuestions, setTranslatedQuestions] = useState({});
 
   useEffect(() => {
     const translateAllQuestions = async () => {
       const translations = await Promise.all(
-        Object.entries(questions).map(async ([id, text]) => {
+        SVquestions.map(async (question) => {
           const translated = await translateText(
-            text || "",
+            question.question_en || "",
             language,
             import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY
           );
-          // console.log("Translated Question:", translated); 
-          return { id, text: translated || text };
+          return { id: question.id, text: translated || question.question_en };
         })
       );
       const translationsObj = translations.reduce((acc, { id, text }) => {
@@ -45,10 +47,10 @@ export default function AllQuestionAnsPage() {
       setTranslatedQuestions(translationsObj);
     };
 
-    if (Object.keys(questions).length > 0) {
+    if (SVquestions.length > 0) {
       translateAllQuestions();
     }
-  }, [questions, language]);
+  }, [SVquestions, language]);
 
   const handleDoneButton = () => {
     navigate("/thankYouPage");
@@ -80,18 +82,20 @@ export default function AllQuestionAnsPage() {
         </p>
         <p>
           Total Questions:
-          <span className="text-[#ecb206] pl-2">{Object.keys(questions).length}</span>{" "}
+          <span className="text-[#ecb206] pl-2">{SVquestions.length}</span>
         </p>
       </div>
       <div>
-        {Object.keys(questions).length === 0 ? (
+        {SVquestions.length === 0 ? (
           <p>No questions available.</p>
         ) : (
-          Object.entries(questions).map(([id, text]) => (
+          SVquestions.map(({ id, question_en }) => (
             <div key={id} className="my-5 p-2">
               <h2 className="py-3 text-[#4B4C53]">
                 Question ID {id}:{" "}
-                <span className="pl-2">{translatedQuestions[id] || text}</span>
+                <span className="pl-2">
+                  {translatedQuestions[id] || question_en}
+                </span>
               </h2>
 
               <p className="mb-2">

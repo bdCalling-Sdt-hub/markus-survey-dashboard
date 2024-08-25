@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import "../../assets/css/style.css";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import UserDeleteRequest from "../../Components/Dashboard/UserDeleteRequest";
 const dataSource = [
   {
     id: "1",
@@ -37,9 +38,7 @@ const SCompanyManage = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  // const handleChange = (value) => {
-  //   console.log(`selected ${value}`);
-  // };
+
   const columns = [
     {
       title: "SL No.",
@@ -84,7 +83,7 @@ const SCompanyManage = () => {
       render: (_, record) => {
         return (
           <div className="start-center text-2xl gap-1 ">
-            <IoEyeOutline className="cursor-pointer" />
+            {/* <IoEyeOutline className="cursor-pointer" /> */}
             <MdOutlineDelete className="cursor-pointer" />
           </div>
         );
@@ -143,6 +142,7 @@ const SCompanyManage = () => {
         </div>
       </div>
       <Table dataSource={dataSource} columns={columns} />
+      {/* <UserDeleteRequest/> */}
 
       {/* modal: */}
       <Modal

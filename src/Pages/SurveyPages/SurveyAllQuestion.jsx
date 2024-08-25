@@ -11,77 +11,61 @@ import { Progress, Select } from "antd";
 import { ConfigProvider, Form, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import translateText from "../../translateText";
-import { useGetSurveyQNQuery } from "../../redux/api/baseapi";
+import {
+  useGetSurveyQNQuery,
+  usePostSurveyQnMutation,
+} from "../../redux/api/baseapi";
+
 const SurveyQuestions = () => {
-  // // RTK start
-  const {
-    data: surveyQueryQN,
-    isLoading,
-    isError,
-    error,
-  } = useGetSurveyQNQuery({});
-  console.log(surveyQueryQN);
-
-  if (isError) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  // const { data: surveyData, error, isLoading } = useGetSurveyQuery(surveyId);
-
-  // if (isLoading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
-
-  // const questions = surveyData?.survey?.survey?.questions;
-
-  // if (!Array.isArray(questions) || questions.length === 0) {
-  //   return <p>No questions available</p>;
-  // }
-
-
-  // // RTK end
-  if (Array.isArray(surveyQueryQN?.survey?.survey?.questions)) {
-    surveyQueryQN.survey.survey.questions.forEach((question) => {
-      console.log(question.question_en);
-      // const questions = question.question_en;
-    });
-  } else {
-    console.log("");
-  }
-
-  const questions = {
-    1: "How satisfied are you with your current work environment?",
-    2: "How would you rate the support you receive from your team?",
-    3: "How do you feel about the work-life balance in your company?",
-    4: "How do you feel about your workload?",
-  };
-
-  
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answerIndex, setAnswerIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answers, setAnswers] = useState({});
   const [translatedQuestion, setTranslatedQuestion] = useState("");
-  const [language, setLanguage] = useState(
-    localStorage.getItem("language") || "de"
-  ); // Default to 'german'
   const navigate = useNavigate();
   const { Option } = Select;
-  const emoji = true;
+  const [language, setLanguage] = useState(
+    localStorage.getItem("language") || "de"
+  );
 
-  // Translate text on component mount and language change
+  // RTK Query for fetching survey questions
+  const { data: surveydata } = useGetSurveyQNQuery({});
+  const [postSurveyQn, { data: surveyQn, isLoading }] =
+    usePostSurveyQnMutation();
+
+  // handle star or emoji
+  const emoji = surveydata?.survey?.survey?.emoji_or_star === "emoji";
+
+  // Handle Questions:
+  const SVquestions = surveydata?.survey?.survey?.questions || [];
+  const questionsId = surveydata?.survey?.survey?.questions;
+
+  if (questionsId && Array.isArray(questionsId)) {
+    questionsId.forEach((question) => {
+      const questionId = question?.id;
+      // console.log(questionId);
+    });
+  } else {
+    // console.log('error');
+  }
+
+  const currentComment = SVquestions[currentQuestion]?.comment;
+  // Handle translation on component mount and language change
   useEffect(() => {
     const fetchTranslation = async () => {
-      const questionText = questions[currentQuestion + 1];
+      const questionText = SVquestions[currentQuestion]?.question_en || "";
+
       const translated = await translateText(
         questionText,
         language,
         import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY
-      ); // Replace with  API key
+      );
       setTranslatedQuestion(translated || questionText);
     };
 
     fetchTranslation();
-  }, [currentQuestion, language]);
+  }, [currentQuestion, language, SVquestions]);
 
   // Handle language change
   const handleLanguageChange = (value) => {
@@ -89,34 +73,72 @@ const SurveyQuestions = () => {
     setLanguage(value);
   };
 
+  // Handle answer selection
   const handleAnswerClick = (answer, displayValue) => {
     setSelectedAnswer(displayValue);
-    console.log(`Selected: ${displayValue}`);
   };
 
-  const handleNextClick = () => {
-    if (selectedAnswer) {
-      const updatedAnswers = {
-        ...answers,
-        [currentQuestion + 1]: selectedAnswer,
-      };
-      setAnswers(updatedAnswers);
+  // Handle "Next" button click
+  console.log(SVquestions[2]);
+  const handleNextClick = async () => {
+    try {
+      if (selectedAnswer) {
+        const questionId = SVquestions[currentQuestion]?.id;
+        const commentText = document.querySelector("textarea")?.value || "";
 
-      const newProgress =
-        ((currentQuestion + 1) / Object.keys(questions).length) * 100;
-      setProgress(newProgress);
+        // Create FormData and append the question, answer, and comment
+        console.log(questionId);
+        let data = new FormData();
+        data.append("question_id", questionId);
+        data.append("answer", selectedAnswer);
+        data.append("comment", currentComment === 1 ? commentText : "");
 
-      if (currentQuestion < Object.keys(questions).length - 1) {
-        setCurrentQuestion(currentQuestion + 1);
-        setSelectedAnswer(null);
+        for (const [key, value] of data.entries()) {
+          console.log(`${key}: ${value}`);
+        }
+
+        // Submit current answer to the server
+        const response = await postSurveyQn(data)
+          .unwrap()
+          .then((res) => {
+            alert("thank you");
+            setCurrentQuestion(currentQuestion + 1);
+          })
+          .catch((err) => {
+            alert(
+              err?.data?.message || "you have already submitted that survay"
+            );
+            if (err?.status == 409) {
+              setCurrentQuestion(currentQuestion + 1);
+            }
+          });
+
+        console.log("Server response:", response);
+
+        // Update progress and state
+        const updatedAnswers = {
+          ...answers,
+          [currentQuestion]: selectedAnswer,
+        };
+        setAnswers(updatedAnswers);
+
+        const newProgress = ((currentQuestion + 1) / SVquestions.length) * 100;
+        setProgress(newProgress);
+
+        // Navigate to the next question or finish
+        if (currentQuestion < SVquestions.length - 1) {
+          setCurrentQuestion(currentQuestion + 1);
+          setSelectedAnswer(null);
+        } else {
+          navigate("/allQuestionAnsPage", {
+            state: { SVquestions, answers: updatedAnswers, language, emoji },
+          });
+        }
       } else {
-        // console.log("Survey completed!", updatedAnswers);
-        navigate("/allQuestionAnsPage", {
-          state: { questions, updatedAnswers, language, emoji },
-        });
+        alert("Please select an answer before proceeding.");
       }
-    } else {
-      alert("Please select an answer before proceeding.");
+    } catch (error) {
+      console.error("Error submitting survey answer:", error);
     }
   };
 
@@ -124,15 +146,19 @@ const SurveyQuestions = () => {
     navigate("/thankYouPage");
   };
 
+  // Render stars rating
   const renderStars = () => (
     <div className="flex gap-5 justify-center items-center my-12">
       {[...Array(5)].map((_, index) => (
         <img
           key={index}
-          className={`btn ${selectedAnswer === index + 1 ? "h-14" : "h-10"}`}
+          className={`btn ${answerIndex === index  ? "h-16" : "h-10"} cursor-pointer`}
           src={starImage}
           alt={`star ${index + 1}`}
-          onClick={() => handleAnswerClick(index + 1, "⭐")}
+          onClick={() => {
+            handleAnswerClick(index + 1, "⭐");
+            setAnswerIndex(index);
+          }}
         />
       ))}
     </div>
@@ -201,117 +227,13 @@ const SurveyQuestions = () => {
             onChange={handleLanguageChange}
           >
             <Option value="af">Afrikaans</Option>
-            <Option value="sq">Albanian</Option>
-            <Option value="am">Amharic</Option>
-            <Option value="ar">Arabic</Option>
-            <Option value="hy">Armenian</Option>
-            <Option value="az">Azerbaijani</Option>
-            <Option value="eu">Basque</Option>
-            <Option value="be">Belarusian</Option>
-            <Option value="bn">Bengali</Option>
-            <Option value="bs">Bosnian</Option>
-            <Option value="bg">Bulgarian</Option>
-            <Option value="ca">Catalan</Option>
-            <Option value="ceb">Cebuano</Option>
-            <Option value="ny">Chichewa</Option>
-            <Option value="zh">Chinese (Simplified)</Option>
-            <Option value="zh-TW">Chinese (Traditional)</Option>
-            <Option value="co">Corsican</Option>
-            <Option value="hr">Croatian</Option>
-            <Option value="cs">Czech</Option>
-            <Option value="da">Danish</Option>
-            <Option value="nl">Dutch</Option>
-            <Option value="en">English</Option>
-            <Option value="eo">Esperanto</Option>
-            <Option value="et">Estonian</Option>
-            <Option value="tl">Filipino</Option>
-            <Option value="fi">Finnish</Option>
-            <Option value="fr">French</Option>
-            <Option value="fy">Frisian</Option>
-            <Option value="gl">Galician</Option>
-            <Option value="ka">Georgian</Option>
+            {/* Additional language options */}
             <Option value="de">German</Option>
-            <Option value="el">Greek</Option>
-            <Option value="gu">Gujarati</Option>
-            <Option value="ht">Haitian Creole</Option>
-            <Option value="ha">Hausa</Option>
-            <Option value="haw">Hawaiian</Option>
-            <Option value="he">Hebrew</Option>
-            <Option value="hi">Hindi</Option>
-            <Option value="hmn">Hmong</Option>
-            <Option value="hu">Hungarian</Option>
-            <Option value="is">Icelandic</Option>
-            <Option value="ig">Igbo</Option>
-            <Option value="id">Indonesian</Option>
-            <Option value="ga">Irish</Option>
-            <Option value="it">Italian</Option>
-            <Option value="ja">Japanese</Option>
-            <Option value="jw">Javanese</Option>
-            <Option value="kn">Kannada</Option>
-            <Option value="kk">Kazakh</Option>
-            <Option value="km">Khmer</Option>
-            <Option value="rw">Kinyarwanda</Option>
-            <Option value="ko">Korean</Option>
-            <Option value="ku">Kurdish (Kurmanji)</Option>
-            <Option value="ky">Kyrgyz</Option>
-            <Option value="lo">Lao</Option>
-            <Option value="la">Latin</Option>
-            <Option value="lv">Latvian</Option>
-            <Option value="lt">Lithuanian</Option>
-            <Option value="lb">Luxembourgish</Option>
-            <Option value="mk">Macedonian</Option>
-            <Option value="mg">Malagasy</Option>
-            <Option value="ms">Malay</Option>
-            <Option value="ml">Malayalam</Option>
-            <Option value="mt">Maltese</Option>
-            <Option value="mi">Maori</Option>
-            <Option value="mr">Marathi</Option>
-            <Option value="mn">Mongolian</Option>
-            <Option value="my">Myanmar (Burmese)</Option>
-            <Option value="ne">Nepali</Option>
-            <Option value="no">Norwegian</Option>
-            <Option value="or">Odia (Oriya)</Option>
-            <Option value="ps">Pashto</Option>
-            <Option value="fa">Persian</Option>
-            <Option value="pl">Polish</Option>
-            <Option value="pt">Portuguese</Option>
-            <Option value="pa">Punjabi</Option>
-            <Option value="ro">Romanian</Option>
-            <Option value="ru">Russian</Option>
-            <Option value="sm">Samoan</Option>
-            <Option value="gd">Scots Gaelic</Option>
-            <Option value="sr">Serbian</Option>
-            <Option value="st">Sesotho</Option>
-            <Option value="sn">Shona</Option>
-            <Option value="sd">Sindhi</Option>
-            <Option value="si">Sinhala</Option>
-            <Option value="sk">Slovak</Option>
-            <Option value="sl">Slovenian</Option>
-            <Option value="so">Somali</Option>
-            <Option value="es">Spanish</Option>
-            <Option value="su">Sundanese</Option>
-            <Option value="sw">Swahili</Option>
-            <Option value="sv">Swedish</Option>
-            <Option value="tg">Tajik</Option>
-            <Option value="ta">Tamil</Option>
-            <Option value="tt">Tatar</Option>
-            <Option value="te">Telugu</Option>
-            <Option value="th">Thai</Option>
-            <Option value="tr">Turkish</Option>
-            <Option value="tk">Turkmen</Option>
-            <Option value="uk">Ukrainian</Option>
-            <Option value="ur">Urdu</Option>
-            <Option value="ug">Uyghur</Option>
-            <Option value="uz">Uzbek</Option>
-            <Option value="vi">Vietnamese</Option>
-            <Option value="cy">Welsh</Option>
-            <Option value="xh">Xhosa</Option>
-            <Option value="yi">Yiddish</Option>
-            <Option value="yo">Yoruba</Option>
-            <Option value="zu">Zulu</Option>
+            <Option value="en">English</Option>
           </Select>
         </div>
 
+        {/* Display translated question */}
         <div>
           <p className="text-center mt-10 px-5">{translatedQuestion}</p>
         </div>
@@ -320,7 +242,7 @@ const SurveyQuestions = () => {
         {emoji ? renderEmojis() : renderStars()}
 
         <div className="p-5 w-11/12 mx-auto">
-          <p>Total Questions: {Object.keys(questions).length} </p>
+          <p>Total Questions: {SVquestions.length} </p>
           <Progress percent={progress} status="active" />
         </div>
 
@@ -339,14 +261,17 @@ const SurveyQuestions = () => {
           onFinishFailed={(errorInfo) => console.log("Failed:", errorInfo)}
           autoComplete="off"
         >
-          <div className="flex justify-center items-center">
-            <img src={commentImg} alt="comment" className="h-8 -mr-8 z-10" />
-            <TextArea
-              rows={1}
-              placeholder="Write your comment here"
-              className="pl-14 text-start"
-            />
-          </div>
+          {/* Conditionally render the textarea if comment === 1 */}
+          {currentComment === 1 && (
+            <div className="flex justify-center items-center">
+              <img src={commentImg} alt="comment" className="h-8 -mr-8 z-10" />
+              <TextArea
+                rows={1}
+                placeholder="Write your comment here"
+                className="pl-14 text-start"
+              />
+            </div>
+          )}
         </Form>
       </ConfigProvider>
 

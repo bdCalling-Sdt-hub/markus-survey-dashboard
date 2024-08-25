@@ -6,11 +6,30 @@ const baseApi = createApi({
     baseUrl: "http://115.127.156.13:7000/api",
   }),
   endpoints: (builder) => ({
-   getSurveyQN: builder.query({
-      query: () => "/single-surveys-questions/7e8f18c7-540e-4faa-b818-f08c3335e586",
+    //Survery Query:
+
+    getSurveyQN: builder.query({
+      query: () =>
+        "/single-surveys-questions/7e8f18c7-540e-4faa-b818-f08c3335e586",
+    }),
+    getAllQnAns: builder.query({
+      query: () => "/anonymous-survey-report?survey_id=17",
+    }),
+    // Super Admin Dashboard Query:
+    getCompany: builder.query({
+      query: () => "/companies",
+    }),
+    // Survey Mutation:
+    postSurveyQn: builder.mutation({
+      query: (data) => ({
+        url: '/anonymous-surveys',
+        method: 'POST',
+        body: data,
+      }),
     }),
 
-
+    
+    // Auth Mutation:
     loginUser: builder.mutation({
       query: (credentials) => ({
         url: "/login",
@@ -49,6 +68,15 @@ const baseApi = createApi({
   }),
 });
 
-export const {useGetSurveyQNQuery,useLoginUserMutation, useSetForgetPassMutation, useSetvarificationCodeMutation,useSetResendCodeMutation,useSetResetPassMutation } =
-  baseApi;
+export const {
+  useGetSurveyQNQuery,
+  useGetAllQnAnsQuery,
+  useGetCompanyQuery,
+  usePostSurveyQnMutation,
+  useLoginUserMutation,
+  useSetForgetPassMutation,
+  useSetvarificationCodeMutation,
+  useSetResendCodeMutation,
+  useSetResetPassMutation,
+} = baseApi;
 export default baseApi;

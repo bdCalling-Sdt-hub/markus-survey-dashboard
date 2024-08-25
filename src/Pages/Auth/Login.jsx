@@ -118,13 +118,14 @@ const Login = () => {
             <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox style={{ color: "#6A6D7C" }}>Remember me</Checkbox>
             </Form.Item>
-            <Link
+            Forgot Password
+            {/* <Link
               className="login-form-forgot "
               style={{ color: "#B47000" }}
               to="/auth/forgot-password"
             >
               Forgot Password
-            </Link>
+            </Link> */}
           </div>
 
           <Form.Item style={{ marginBottom: 0 }}>

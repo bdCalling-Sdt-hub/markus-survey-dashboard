@@ -7,14 +7,13 @@ const baseApi = createApi({
   }),
   endpoints: (builder) => ({
     //Survery Query:
-
     getSurveyQN: builder.query({
-      query: () =>
-        "/single-surveys-questions/7e8f18c7-540e-4faa-b818-f08c3335e586",
+      query: (barcode) => `/single-surveys-questions/${barcode}`,
     }),
     getAllQnAns: builder.query({
-      query: () => "/anonymous-survey-report?survey_id=17",
+      query: (survey_id) => `/anonymous-survey-report?survey_id=${survey_id}`,
     }),
+
     // Super Admin Dashboard Query:
     getCompany: builder.query({
       query: () => "/companies",
@@ -22,13 +21,12 @@ const baseApi = createApi({
     // Survey Mutation:
     postSurveyQn: builder.mutation({
       query: (data) => ({
-        url: '/anonymous-surveys',
-        method: 'POST',
+        url: "/anonymous-surveys",
+        method: "POST",
         body: data,
       }),
     }),
 
-    
     // Auth Mutation:
     loginUser: builder.mutation({
       query: (credentials) => ({

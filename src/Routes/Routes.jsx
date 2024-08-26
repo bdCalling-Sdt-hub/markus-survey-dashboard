@@ -164,28 +164,24 @@ export const router = createBrowserRouter([
     element: <UpdatePassword />,
   },
   // Survey Questions :
-{
-path:"/selectLanguagePage",
-element:<SelectLanguagePage/>
-},
-  // {
-  //   path: "/surveyQuestions",
-  //   element: <SurveyQuestions />,
-  // },
   {
-    path: "/surveyAllQuestions",
+    path: "/selectLanguagePage",
+    element: <SelectLanguagePage />,
+  },
+  {
+    path: "/surveyAllQuestions/:barcode",
     element: <SurveyAllQuestions />,
   },
   {
-    path: "/thankYouPage",
-    element: <ThankYouPage />,
-  },
-  {
-    path: "/allQuestionAnsPage",
+    path: "/allQuestionAnsPage/:survey_id",
     element: <AllQuestionAnsPage />,
   },
   {
     path: "/translateComponent",
-    element: <TranslateComponent/>,
+    element: <TranslateComponent />,
+  },
+  {
+    path: "/thankYouPage",
+    element: <ThankYouPage />,
   },
 ]);

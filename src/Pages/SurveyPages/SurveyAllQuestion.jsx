@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import smile from "../../assets/images/smile.png";
 import angry from "../../assets/images/angry.png";
 import silent from "../../assets/images/silent.png";
@@ -24,20 +24,21 @@ const SurveyQuestions = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [answers, setAnswers] = useState({});
   const [translatedQuestion, setTranslatedQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const navigate = useNavigate();
   const { Option } = Select;
   const [language, setLanguage] = useState(
     localStorage.getItem("language") || "de"
   );
-
   // RTK Query for fetching survey questions
-  const { data: surveydata } = useGetSurveyQNQuery({});
+  const { barcode } = useParams();
+  const { data: surveydata } = useGetSurveyQNQuery(barcode);
   const [postSurveyQn, { data: surveyQn, isLoading }] =
     usePostSurveyQnMutation();
+  const survey_id = surveydata?.survey?.survey_id;
 
   // handle star or emoji
   const emoji = surveydata?.survey?.survey?.emoji_or_star === "emoji";
-
   // Handle Questions:
   const SVquestions = surveydata?.survey?.survey?.questions || [];
   const questionsId = surveydata?.survey?.survey?.questions;
@@ -45,12 +46,14 @@ const SurveyQuestions = () => {
   if (questionsId && Array.isArray(questionsId)) {
     questionsId.forEach((question) => {
       const questionId = question?.id;
+      // console.log(questionId)
     });
   } else {
-    console.log("error");
+    // console.log("error");
   }
 
   const currentComment = SVquestions[currentQuestion]?.comment;
+
   // Handle translation on component mount and language change
   useEffect(() => {
     const fetchTranslation = async () => {
@@ -75,27 +78,22 @@ const SurveyQuestions = () => {
 
   // Handle answer selection
   const handleAnswerClick = (answer, displayValue) => {
-    setSelectedAnswer(displayValue);
+    setSelectedAnswer(displayValue,answer);
   };
 
   // Handle "Next" button click
-  console.log(SVquestions[2]);
   const handleNextClick = async () => {
     try {
       if (selectedAnswer) {
         const questionId = SVquestions[currentQuestion]?.id;
         const commentText = document.querySelector("textarea")?.value || "";
 
+
         // Create FormData and append the question, answer, and comment
-        console.log(questionId);
         let data = new FormData();
         data.append("question_id", questionId);
         data.append("answer", selectedAnswer);
         data.append("comment", currentComment === 1 ? commentText : "");
-
-        for (const [key, value] of data.entries()) {
-          // console.log(`${key}: ${value}`);
-        }
 
         // Submit current answer to the server
         const response = await postSurveyQn(data)
@@ -112,16 +110,16 @@ const SurveyQuestions = () => {
             Swal.fire({
               title: "Good job!",
               text:
-                err?.data?.message || "you have already submitted that survay",
+                err?.data?.message || "You have already submitted that survey",
               icon: "success",
             });
 
-            if (err?.status == 409) {
+            if (err?.status === 409) {
               setCurrentQuestion(currentQuestion + 1);
             }
           });
 
-        console.log("Server response:", response);
+        // console.log("Server response:", response);
 
         // Update progress and state
         const updatedAnswers = {
@@ -132,13 +130,24 @@ const SurveyQuestions = () => {
 
         const newProgress = ((currentQuestion + 1) / SVquestions.length) * 100;
         setProgress(newProgress);
+        // clear the comment box:
 
         // Navigate to the next question or finish
         if (currentQuestion < SVquestions.length - 1) {
           setCurrentQuestion(currentQuestion + 1);
           setSelectedAnswer(null);
         } else {
-          navigate("/allQuestionAnsPage", {
+          if (!survey_id) {
+            console.error("Survey ID is not defined");
+            Swal.fire({
+              title: "Error",
+              text: "Survey ID is missing. Cannot navigate.",
+              icon: "error",
+            });
+            return;
+          }
+          // Navigate to the allQuestionAnsPage with survey_id
+          navigate(`/allQuestionAnsPage/${survey_id}`, {
             state: { SVquestions, answers: updatedAnswers, language, emoji },
           });
         }
@@ -149,28 +158,32 @@ const SurveyQuestions = () => {
           text: "Please select an answer before proceeding.",
         });
       }
+      setAnswer("");
     } catch (error) {
       console.error("Error submitting survey answer:", error);
     }
   };
 
   const handleQuitClick = () => {
-    navigate("/thankYouPage");
+    navigate("/thankYouPage", { replace: true });
   };
 
-  // Render stars rating
+  // Render stars rating:
+
+
   const renderStars = () => (
     <div className="flex gap-5 justify-center items-center my-12">
       {[...Array(5)].map((_, index) => (
         <img
           key={index}
           className={`btn ${
-            answerIndex === index ? "h-16" : "h-10"
+            selectedAnswer && answerIndex === index ? "h-16" : "h-10"
           } cursor-pointer`}
           src={starImage}
           alt={`star ${index + 1}`}
           onClick={() => {
             handleAnswerClick(index + 1, "⭐");
+            // handleAnswerClick(index + 1, "⭐");
             setAnswerIndex(index);
           }}
         />
@@ -215,7 +228,7 @@ const SurveyQuestions = () => {
   );
 
   return (
-    <div className="container mx-auto bg-[fdfdfd] my-24">
+    <div className="container mx-auto bg-[fdfdfd] my-5">
       <ConfigProvider
         theme={{
           components: {
@@ -231,7 +244,7 @@ const SurveyQuestions = () => {
           },
         }}
       >
-        <h1 className="text-3xl text-center my-12">Survey</h1>
+        <h1 className="text-3xl text-center mb-5">Survey</h1>
 
         {/* Language Selector */}
         <div className="flex justify-end px-14 items-center">
@@ -354,7 +367,7 @@ const SurveyQuestions = () => {
 
         {/* Display translated question */}
         <div>
-          <p className="text-center mt-10 px-5">{translatedQuestion}</p>
+          <p className="text-center mt-8 px-5">{translatedQuestion}</p>
         </div>
 
         {/* Render Stars or Emojis based on the emoji flag */}
@@ -389,6 +402,8 @@ const SurveyQuestions = () => {
             <div className="flex justify-center items-center">
               <img src={commentImg} alt="comment" className="h-8 -mr-8 z-10" />
               <TextArea
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
                 rows={1}
                 placeholder="Write your comment here"
                 className="pl-14 text-start"
@@ -398,7 +413,7 @@ const SurveyQuestions = () => {
         </Form>
       </ConfigProvider>
 
-      <div className="flex flex-col gap-5 justify-center items-center my-8">
+      <div className="flex flex-col gap-5 justify-center items-center my-5">
         <button
           className="py-2 w-44 bg-[#ecb206] text-white rounded-md"
           onClick={handleNextClick}

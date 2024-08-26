@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import smile from "../../assets/images/smile.png";
 import angry from "../../assets/images/angry.png";
 import silent from "../../assets/images/silent.png";
 import sad from "../../assets/images/sad.png";
 import blushing from "../../assets/images/blushing.png";
-import starImage from "../../assets/images/star.png"; // Import the star image
+import starImage from "../../assets/images/star.png";
 import translateText from "../../translateText";
 import { useGetAllQnAnsQuery } from "../../redux/api/baseapi";
 
@@ -15,14 +15,14 @@ export default function AllQuestionAnsPage() {
   const [translatedQuestions, setTranslatedQuestions] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
-  const { data: allQn, error, isLoading } = useGetAllQnAnsQuery(); // Destructure response with loading and error states
-
+  // RTK Query for all question:
+  const { survey_id } = useParams();
+  const { data: allQn, error, isLoading } = useGetAllQnAnsQuery(survey_id);
   const { language = selectedlanguage } = location.state || {};
-
-  // Ensure allQn is defined before destructuring its properties
   const ans = allQn?.answers || [];
- const emoji = allQn?.emoji_or_star === "emoji";
-  // console.log(emoji);
+  const emoji = allQn?.emoji_or_star === "emoji";
+  
+  
   useEffect(() => {
     const translateAllQuestions = async () => {
       if (!ans.length) return;
@@ -53,22 +53,20 @@ export default function AllQuestionAnsPage() {
   }, [ans, language]);
 
   const handleDoneButton = () => {
-   
-    navigate("/thankYouPage");
-  
+    navigate("/thankYouPage", { replace: true });
   };
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Something went wrong: {error.message}</p>;
 
   return (
-    <div className="container mx-auto mt-10 p-5">
+    <div className="container mx-auto mt-5 p-5">
       <div className="flex items-center">
         <FaArrowLeft
-          className="mt-10 mb-5 cursor-pointer"
+          className="mt-5 mb-5 cursor-pointer"
           onClick={() => navigate(-1)}
         />
-        <h1 className="text-3xl flex items-end justify-center w-full mt-10 mb-5">
+        <h1 className="text-3xl flex items-end justify-center w-full mt-5 mb-5">
           All Results
         </h1>
       </div>
@@ -94,7 +92,7 @@ export default function AllQuestionAnsPage() {
         {ans.length === 0 ? (
           <p>No questions available.</p>
         ) : (
-          ans.map(({ question_id, answer, question }) => (
+          ans.map(({ question_id, answer, question, comment }) => (
             <div key={question_id} className="my-5 p-2">
               <h2 className="py-3 text-[#4B4C53]">
                 Question ID {question_id} :
@@ -158,6 +156,7 @@ export default function AllQuestionAnsPage() {
                   "No answer provided"
                 )}
               </p>
+              <p>Comment: {comment ? comment : "No comment provided"}</p>
               <hr className="border-t border-gray-300" />
             </div>
           ))

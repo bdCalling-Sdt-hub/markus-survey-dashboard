@@ -21,7 +21,7 @@ export default function AllQuestionAnsPage() {
 
   // Ensure allQn is defined before destructuring its properties
   const ans = allQn?.answers || [];
-  const emoji = allQn?.emoji_or_star;
+ const emoji = allQn?.emoji_or_star === "emoji";
   // console.log(emoji);
   useEffect(() => {
     const translateAllQuestions = async () => {
@@ -53,7 +53,9 @@ export default function AllQuestionAnsPage() {
   }, [ans, language]);
 
   const handleDoneButton = () => {
+   
     navigate("/thankYouPage");
+  
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -104,7 +106,7 @@ export default function AllQuestionAnsPage() {
               <p className="mb-2">
                 <span className="pr-2">Ans :</span>
                 {answer ? (
-                  !emoji ? (
+                  emoji ? (
                     <>
                       {answer === "😠" && (
                         <img

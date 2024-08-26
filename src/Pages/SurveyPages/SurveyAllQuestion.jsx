@@ -15,6 +15,7 @@ import {
   useGetSurveyQNQuery,
   usePostSurveyQnMutation,
 } from "../../redux/api/baseapi";
+import Swal from "sweetalert2";
 
 const SurveyQuestions = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -44,10 +45,9 @@ const SurveyQuestions = () => {
   if (questionsId && Array.isArray(questionsId)) {
     questionsId.forEach((question) => {
       const questionId = question?.id;
-      // console.log(questionId);
     });
   } else {
-    // console.log('error');
+    console.log("error");
   }
 
   const currentComment = SVquestions[currentQuestion]?.comment;
@@ -101,13 +101,21 @@ const SurveyQuestions = () => {
         const response = await postSurveyQn(data)
           .unwrap()
           .then((res) => {
-            alert("thank you");
+            Swal.fire({
+              title: "Good job!",
+              text: "Thank You!",
+              icon: "success",
+            });
             setCurrentQuestion(currentQuestion + 1);
           })
           .catch((err) => {
-            alert(
-              err?.data?.message || "you have already submitted that survay"
-            );
+            Swal.fire({
+              title: "Good job!",
+              text:
+                err?.data?.message || "you have already submitted that survay",
+              icon: "success",
+            });
+
             if (err?.status == 409) {
               setCurrentQuestion(currentQuestion + 1);
             }
@@ -135,7 +143,11 @@ const SurveyQuestions = () => {
           });
         }
       } else {
-        alert("Please select an answer before proceeding.");
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Please select an answer before proceeding.",
+        });
       }
     } catch (error) {
       console.error("Error submitting survey answer:", error);
@@ -152,7 +164,9 @@ const SurveyQuestions = () => {
       {[...Array(5)].map((_, index) => (
         <img
           key={index}
-          className={`btn ${answerIndex === index  ? "h-16" : "h-10"} cursor-pointer`}
+          className={`btn ${
+            answerIndex === index ? "h-16" : "h-10"
+          } cursor-pointer`}
           src={starImage}
           alt={`star ${index + 1}`}
           onClick={() => {
@@ -226,7 +240,7 @@ const SurveyQuestions = () => {
             style={{ width: 120 }}
             onChange={handleLanguageChange}
           >
-           <option value="af">Afrikaans</option>
+            <option value="af">Afrikaans</option>
             <option value="sq">Albanian</option>
             <option value="am">Amharic</option>
             <option value="ar">Arabic</option>
@@ -335,7 +349,6 @@ const SurveyQuestions = () => {
             <option value="yi">Yiddish</option>
             <option value="yo">Yoruba</option>
             <option value="zu">Zulu</option>
-
           </Select>
         </div>
 
@@ -349,7 +362,11 @@ const SurveyQuestions = () => {
 
         <div className="p-5 w-11/12 mx-auto">
           <p>Total Questions: {SVquestions.length} </p>
-          <Progress percent={progress} status="active" />
+          <Progress
+            percent={progress}
+            format={() => `${progress.toFixed()}%`}
+            status="active"
+          />
         </div>
 
         <Form

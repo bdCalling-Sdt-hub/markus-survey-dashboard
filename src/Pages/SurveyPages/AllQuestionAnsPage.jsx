@@ -6,55 +6,58 @@ import angry from "../../assets/images/angry.png";
 import silent from "../../assets/images/silent.png";
 import sad from "../../assets/images/sad.png";
 import blushing from "../../assets/images/blushing.png";
-import starImage from "../../assets/images/star.png";
+import starImage from "../../assets/images/star.png"; // Import the star image
 import translateText from "../../translateText";
-import {
-  useGetAllQnAnsQuery,
-} from "../../redux/api/baseapi";
+import { useGetAllQnAnsQuery } from "../../redux/api/baseapi";
 
 export default function AllQuestionAnsPage() {
   const selectedlanguage = localStorage.getItem("language") || "de";
   const [translatedQuestions, setTranslatedQuestions] = useState({});
-  const { data: allQn } = useGetAllQnAnsQuery();
-  // console.log(allQn);
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    SVquestions = [],
-    updatedAnswers = {},
-    language = selectedlanguage,
-    emoji = true,
-  } = location.state || {};
+  const { data: allQn, error, isLoading } = useGetAllQnAnsQuery(); // Destructure response with loading and error states
 
+  const { language = selectedlanguage } = location.state || {};
 
-
+  // Ensure allQn is defined before destructuring its properties
+  const ans = allQn?.answers || [];
+  const emoji = allQn?.emoji_or_star;
+  // console.log(emoji);
   useEffect(() => {
     const translateAllQuestions = async () => {
+      if (!ans.length) return;
+
       const translations = await Promise.all(
-        SVquestions.map(async (question) => {
+        ans.map(async (answer) => {
           const translated = await translateText(
-            question.question_en || "",
+            answer?.question?.question_en || "",
             language,
             import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY
           );
-          return { id: question.id, text: translated || question.question_en };
+          return {
+            id: answer.question_id,
+            text: translated || answer.question?.question_en,
+          };
         })
       );
+
       const translationsObj = translations.reduce((acc, { id, text }) => {
         acc[id] = text;
         return acc;
       }, {});
+
       setTranslatedQuestions(translationsObj);
     };
 
-    if (SVquestions.length > 0) {
-      translateAllQuestions();
-    }
-  }, [SVquestions, language]);
+    translateAllQuestions();
+  }, [ans, language]);
 
   const handleDoneButton = () => {
     navigate("/thankYouPage");
   };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Something went wrong: {error.message}</p>;
 
   return (
     <div className="container mx-auto mt-10 p-5">
@@ -69,12 +72,12 @@ export default function AllQuestionAnsPage() {
       </div>
       <div className="space-y-2">
         <p>
-          Company Name:{" "}
-          <span className="text-[#ecb206] pl-2">Creative IT Institute</span>{" "}
+          Company Name:
+          <span className="text-[#ecb206] pl-2">Creative IT Institute</span>
         </p>
         <p>
           Project Name:
-          <span className="text-[#ecb206] pl-2">Employee Feedback</span>{" "}
+          <span className="text-[#ecb206] pl-2">Employee Feedback</span>
         </p>
         <p>
           Survey Name:
@@ -82,56 +85,56 @@ export default function AllQuestionAnsPage() {
         </p>
         <p>
           Total Questions:
-          <span className="text-[#ecb206] pl-2">{SVquestions.length}</span>
+          <span className="text-[#ecb206] pl-2">{ans.length}</span>
         </p>
       </div>
       <div>
-        {SVquestions.length === 0 ? (
+        {ans.length === 0 ? (
           <p>No questions available.</p>
         ) : (
-          SVquestions.map(({ id, question_en }) => (
-            <div key={id} className="my-5 p-2">
+          ans.map(({ question_id, answer, question }) => (
+            <div key={question_id} className="my-5 p-2">
               <h2 className="py-3 text-[#4B4C53]">
-                Question ID {id}:{" "}
+                Question ID {question_id} :
                 <span className="pl-2">
-                  {translatedQuestions[id] || question_en}
+                  {translatedQuestions[question_id] || question?.question_en}
                 </span>
               </h2>
 
               <p className="mb-2">
-                <span className="pr-2">Ans:</span>{" "}
-                {updatedAnswers[id] ? (
-                  emoji ? (
+                <span className="pr-2">Ans :</span>
+                {answer ? (
+                  !emoji ? (
                     <>
-                      {updatedAnswers[id] === "😠" && (
+                      {answer === "😠" && (
                         <img
                           src={angry}
                           alt="angry emoji"
                           className="inline-block h-6"
                         />
                       )}
-                      {updatedAnswers[id] === "🤐" && (
+                      {answer === "🤐" && (
                         <img
                           src={silent}
                           alt="silent emoji"
                           className="inline-block h-6"
                         />
                       )}
-                      {updatedAnswers[id] === "😢" && (
+                      {answer === "😢" && (
                         <img
                           src={sad}
                           alt="sad emoji"
                           className="inline-block h-6"
                         />
                       )}
-                      {updatedAnswers[id] === "😊" && (
+                      {answer === "😊" && (
                         <img
                           src={smile}
                           alt="smile emoji"
                           className="inline-block h-6"
                         />
                       )}
-                      {updatedAnswers[id] === "🥰" && (
+                      {answer === "🥰" && (
                         <img
                           src={blushing}
                           alt="blushing emoji"
@@ -140,17 +143,14 @@ export default function AllQuestionAnsPage() {
                       )}
                     </>
                   ) : (
-                    [...Array(5)].map(
-                      (_, i) =>
-                        i < updatedAnswers[id] && (
-                          <img
-                            key={i}
-                            src={starImage}
-                            alt="star"
-                            className="inline-block h-6"
-                          />
-                        )
-                    )
+                    [...Array(answer === "⭐")].map((_, i) => (
+                      <img
+                        key={i}
+                        src={starImage}
+                        alt="star"
+                        className="inline-block h-6"
+                      />
+                    ))
                   )
                 ) : (
                   "No answer provided"
